@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101114">
+<title>BOAR — Ride Your Line</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root {
+  --bg:#101114;--card:#202228;--text:#fff;
+  --muted:#a5a7ae;--orange:#ff8525;--line:#383b43;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+body.light{--bg:#f1f2f4;--card:#fff;--text:#17181b;--muted:#62656d;--line:#d6d8dd}
+button{font:inherit;cursor:pointer}
+header{height:65px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:1000}
+.logo{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:900;letter-spacing:2px}
+.mark{border:2px solid var(--orange);color:var(--orange);padding:5px 10px;border-radius:7px;font-size:23px}
+.tag{font-size:9px;color:var(--muted)}
+.page{display:none;max-width:1000px;margin:auto;padding:14px 14px 95px}
+.page.active{display:block}
+.hero{height:65vh;min-height:360px;max-height:620px;position:relative;border-radius:13px;overflow:hidden;margin-bottom:25px;background:#252525}
+.hero img{width:100%;height:100%;object-fit:cover}
+.shade{position:absolute;inset:0;background:linear-gradient(0deg,#000c,transparent 65%)}
+.heroText{position:absolute;bottom:20px;left:18px}
+.orange{color:var(--orange);font-size:11px;font-weight:bold;letter-spacing:2px}
+.hero h1{font-size:clamp(38px,9vw,60px);line-height:.95;margin:10px 0}
+h2{font-size:19px}
+.heading{display:flex;align-items:center;justify-content:space-between;margin:20px 0 13px}
+.muted{color:var(--muted);font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.card img{width:100%;height:145px;object-fit:cover}
+.inside{padding:13px}
+.inside h3{margin:0 0 8px;font-size:16px}
+.inside p{font-size:13px;color:var(--muted)}
+.btn{background:var(--orange);color:#111;border:0;padding:10px 14px;border-radius:8px;font-weight:bold}
+.outline{background:var(--card);color:var(--text);border:1px solid var(--line);padding:9px 12px;border-radius:8px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.tabs button.selected{background:var(--orange);color:#111;border-color:var(--orange)}
+#map{height:calc(100dvh - 165px);min-height:420px;border-radius:10px}
+.mapWrap{position:relative}
+.mapTools{position:absolute;z-index:500;top:10px;left:10px;display:flex;flex-direction:column;gap:5px}
+.mapTools button{background:#000b;color:white;border:0;padding:7px 9px;border-radius:3px;font-size:11px;text-align:left}
+.note{padding:12px;margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:12px}
+.videoBox{height:270px;background:linear-gradient(140deg,#454952,#15171b);display:grid;place-items:center;text-align:center;padding:20px}
+.group{padding:15px;margin:10px 0;background:var(--card);border:1px solid var(--line);border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.profile{display:flex;align-items:center;gap:15px;margin:22px 0}
+.avatar{height:82px;width:82px;border-radius:50%;object-fit:cover;border:3px solid var(--orange)}
+.stats{display:flex;gap:25px;color:var(--muted);font-size:12px}
+.stats b{display:block;font-size:20px;color:var(--text)}
+.nav{position:fixed;bottom:0;left:0;right:0;height:70px;padding-bottom:env(safe-area-inset-bottom);background:var(--bg);border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;z-index:1000}
+.nav button{border:0;background:none;color:var(--muted);font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.nav button span{font-size:21px}
+.nav button.active{color:var(--orange)}
+.modal{display:none;position:fixed;inset:0;background:#000b;z-index:2000;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modalContent{background:var(--card);padding:20px;border-radius:14px;width:100%;max-width:380px}
+input{width:100%;padding:12px;margin:7px 0;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px}
+@media(min-width:700px){.page{padding:22px 22px 100px}.hero{height:500px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="mark">B</div><div>BOAR<div class="tag">RIDE YOUR LINE.</div></div></div>
+  <button class="outline" onclick="toggleTheme()">☼ / ☾</button>
+</header>
+
+<main>
+<section class="page active" id="home">
+  <div class="hero">
+    <img id="heroImage" alt="VTT en descente">
+    <div class="shade"></div>
+    <div class="heroText">
+      <div class="orange">RIDE YOUR LINE</div>
+      <h1>LA PASSION<br>DU TERRAIN.</h1>
+      <p>Découvre. Roule. Partage.</p>
+    </div>
+  </div>
+  <div class="heading"><h2>ACTU VÉLO</h2><span class="muted">BOAR / À LA UNE</span></div>
+  <div class="cards">
+    <article class="card">
+      <img src="https://images.unsplash.com/photo-1544191696-15693072a9b2?auto=format&fit=crop&w=800&q=80" alt="VTT">
+      <div class="inside"><h3>Explore de nouveaux spots</h3><p>Prépare ta prochaine sortie.</p><button class="outline" onclick="go('map')">Voir la carte</button></div>
+    </article>
+    <article class="card">
+      <img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=800&q=80" alt="Vélo">
+      <div class="inside"><h3>La communauté BOAR</h3><p>Retrouve les riders.</p><button class="outline" onclick="go('groups')">Voir les groupes</button></div>
+    </article>
+  </div>
+</section>
+
+<section class="page" id="mapPage">
+  <div class="heading"><h2>CARTE DES SPOTS</h2><span class="muted">EXPLORE</span></div>
+  <div class="mapWrap">
+    <div id="map"></div>
+    <div class="mapTools">
+      <button onclick="filterSpots('all')">Tous les spots</button>
+      <button onclick="filterSpots('public')">Terrains publics</button>
+      <button onclick="filterSpots('private')">Terrains privés</button>
+      <button onclick="filterSpots('park')">Bike parks</button>
+      <button onclick="filterSpots('track')">Pistes</button>
+      <button onclick="alert('La création de piste sera ajoutée dans une prochaine version.')">+ Créer une piste</button>
+      <button onclick="alert('La création d’itinéraire sera ajoutée dans une prochaine version.')">+ Créer un itinéraire</button>
+    </div>
+  </div>
+  <div class="note">Carte de démonstration : les points affichés sont fictifs. Tu peux zoomer et déplacer la carte.</div>
+</section>
+
+<section class="page" id="videos">
+  <div class="heading"><h2>VIDÉOS</h2><span class="muted">DÉCOUVRIR</span></div>
+  <div class="tabs">
+    <button class="outline selected" onclick="videoTab('terrain',this)">Nouveaux terrains</button>
+    <button class="outline" onclick="videoTab('fun',this)">Vidéos divertissement</button>
+  </div>
+  <div id="videoContent">
+    <article class="card">
+      <div class="videoBox"><div><div class="orange">TERRAIN À DÉCOUVRIR</div><h2>Présentation d'un spot</h2></div></div>
+      <div class="inside"><h3>Spot forestier — exemple</h3><p>Présentation fictive d'un terrain.</p><button class="outline" onclick="alert('Fiche terrain bientôt disponible.')">Découvrir le terrain</button></div>
+    </article>
+  </div>
+</section>
+
+<section class="page" id="groups">
+  <div class="heading"><h2>GROUPES & MESSAGES</h2></div>
+  <div class="tabs">
+    <button class="outline selected" onclick="groupTab('public',this)">Public</button>
+    <button class="outline" onclick="groupTab('private',this)">Privé</button>
+  </div>
+  <div id="groupContent">
+    <div class="group"><div><b>Riders de Wallonie</b><div class="muted">Groupe public · Exemple</div></div><button class="outline" onclick="alert('Messagerie bientôt disponible.')">Ouvrir</button></div>
+    <div class="group"><div><b>Sorties du week-end</b><div class="muted">Groupe public · Exemple</div></div><button class="outline" onclick="alert('Messagerie bientôt disponible.')">Ouvrir</button></div>
+  </div>
+  <div class="note">Les messages et l'envoi de vidéos seront ajoutés avec les comptes utilisateurs.</div>
+</section>
+
+<section class="page" id="profile">
+  <div class="heading"><h2>MON PROFIL</h2><button class="outline" onclick="openSettings()">⚙ Paramètres</button></div>
+  <div class="profile">
+    <img class="avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" alt="Profil">
+    <div><h2 style="margin:0 0 5px">Rider BOAR</h2><span class="muted">@rider_boar · Démonstration</span></div>
+  </div>
+  <div class="stats"><div><b>0</b>Vidéos</div><div><b>0</b>Likes</div><div><b>0</b>Abonnés</div></div>
+  <div class="note">Ton profil sera personnalisable après la mise en place des comptes.</div>
+</section>
+</main>
+
+<nav class="nav">
+  <button class="active" data-id="home" onclick="go('home')"><span>⌂</span>Accueil</button>
+  <button data-id="map" onclick="go('map')"><span>⌖</span>Carte</button>
+  <button data-id="groups" onclick="go('groups')"><span>♧</span>Groupes</button>
+  <button data-id="videos" onclick="go('videos')"><span>▷</span>Vidéos</button>
+  <button data-id="profile" onclick="go('profile')"><span>◉</span>Profil</button>
+</nav>
+
+<div class="modal" id="settings">
+  <div class="modalContent">
+    <div class="heading"><h2>Paramètres</h2><button class="outline" onclick="closeSettings()">Fermer</button></div>
+    <p class="muted">Apparence</p>
+    <button class="btn" onclick="toggleTheme()">Changer le thème clair / sombre</button>
+    <p class="note">Les réglages du compte arriveront plus tard.</p>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// Trois images qui changent à chaque nouvelle visite.
+const heroImages=[
+"https://images.unsplash.com/photo-1544191696-15693072a9b2?auto=format&fit=crop&w=1400&q=85",
+"https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=1400&q=85",
+"https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?auto=format&fit=crop&w=1400&q=85"
+];
+let visit=Number(localStorage.getItem("boarVisit")||0);
+document.getElementById("heroImage").src=heroImages[visit%3];
+localStorage.setItem("boarVisit",visit+1);
+
+if(localStorage.getItem("boarTheme")==="light")document.body.classList.add("light");
+
+function go(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(id==="map"?"mapPage":id).classList.add("active");
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.id===id));
+ if(id==="map"&&window.map)setTimeout(()=>map.invalidateSize(),150);
+ window.scrollTo(0,0);
+}
+function toggleTheme(){
+ document.body.classList.toggle("light");
+ localStorage.setItem("boarTheme",document.body.classList.contains("light")?"light":"dark");
+}
+function openSettings(){document.getElementById("settings").classList.add("show")}
+function closeSettings(){document.getElementById("settings").classList.remove("show")}
+
+function videoTab(type,button){
+ document.querySelectorAll("#videos .tabs button").forEach(b=>b.classList.remove("selected"));
+ button.classList.add("selected");
+ document.getElementById("videoContent").innerHTML=type==="terrain"?
+ `<article class="card"><div class="videoBox"><div><div class="orange">TERRAINS À DÉCOUVRIR</div><h2>Présentation d'un spot</h2></div></div><div class="inside"><h3>Spot forestier — exemple</h3><p>Vidéo de démonstration.</p><button class="outline" onclick="alert('Fiche terrain bientôt disponible.')">Découvrir le terrain</button></div></article>`:
+ `<div class="videoBox"><div><div class="orange">VIDÉOS RIDERS</div><h2>VTT · mécanique · sorties</h2><p class="muted">Le fil vidéo sera connecté plus tard.</p></div></div>`;
+}
+function groupTab(type,button){
+ document.querySelectorAll("#groups .tabs button").forEach(b=>b.classList.remove("selected"));
+ button.classList.add("selected");
+ document.getElementById("groupContent").innerHTML=type==="public"?
+ `<div class="group"><div><b>Riders de Wallonie</b><div class="muted">Groupe public · Exemple</div></div><button class="outline" onclick="alert('Messagerie bientôt disponible.')">Ouvrir</button></div>`:
+ `<div class="note">Tes conversations privées apparaîtront ici après activation des comptes.</div>`;
+}
+
+let map;
+let markers=[];
+if(window.L){
+ map=L.map("map",{worldCopyJump:true}).setView([50.5,5.4],8);
+ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+ maxZoom:19,attribution:"© OpenStreetMap"
+ }).addTo(map);
+ const spots=[
+ {name:"Spot public (exemple)",pos:[50.5,5.4],type:"public"},
+ {name:"Bike park (exemple)",pos:[50.25,5.9],type:"park"},
+ {name:"Zone privée approximative (exemple)",pos:[50.72,5.1],type:"private"},
+ {name:"Piste (exemple)",pos:[50.62,5.65],type:"track"}
+ ];
+ spots.forEach(s=>{
+ const m=L.marker(s.pos).bindPopup("<b>"+s.name+"</b><br>Lieu fictif de démonstration");
+ m.boarType=s.type;markers.push(m);m.addTo(map);
+ });
+}
+function filterSpots(type){
+ markers.forEach(m=>{
+ if(type==="all"||m.boarType===type){if(!map.hasLayer(m))m.addTo(map)}
+ else if(map.hasLayer(m))map.removeLayer(m);
+ });
+}
+</script>
+</body>
+</html>
