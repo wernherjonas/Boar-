@@ -3,597 +3,505 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080808">
 <title>BOAR — Ride Your Line</title>
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#080808;--card:#141414;--line:#292929;--grey:#929292;--white:#fff}
-body{background:var(--bg);color:var(--white);font-family:Arial,sans-serif;overflow-x:hidden}
-button{font:inherit;cursor:pointer}
-a{color:inherit;text-decoration:none}
-
-header{
-height:68px;position:fixed;top:0;left:0;width:100%;z-index:20;
-display:flex;align-items:center;justify-content:space-between;
-padding:0 20px;background:rgba(8,8,8,.96);
-border-bottom:1px solid var(--line);backdrop-filter:blur(15px)
+:root {
+  --bg:#080808;
+  --panel:#111;
+  --white:#f5f5f5;
+  --grey:#999;
+  --line:#292929;
 }
-.menu-button{background:none;border:0;color:white;font-size:25px;padding:8px}
-.logo{font-size:27px;font-weight:1000;letter-spacing:5px;text-align:center}
-.logo small{display:block;font-size:9px;color:#888;letter-spacing:3px;margin-top:3px}
-.header-right{font-size:10px;letter-spacing:2px;color:#999}
-
-.page{display:none;min-height:100vh;padding-top:68px;animation:appear .3s ease}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--white);
+  font-family:Arial,Helvetica,sans-serif;
+  overflow-x:hidden;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+img{display:block;width:100%;object-fit:cover}
+.hidden{display:none!important}
+#app{min-height:100vh;padding-bottom:35px}
+.topbar{
+  height:65px;padding:0 20px;display:flex;
+  align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:20;
+  background:rgba(8,8,8,.94);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.brand{font-size:24px;font-weight:900;letter-spacing:5px}
+.brand small{display:block;font-size:8px;letter-spacing:3px;color:#aaa;margin-top:3px}
+.menu-button{
+  border:0;background:none;font-size:26px;
+  width:42px;height:42px;text-align:left;
+}
+.page{display:none;animation:appear .3s ease}
 .page.active{display:block}
-@keyframes appear{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.section{padding:25px 18px}
+.eyebrow{font-size:10px;letter-spacing:3px;color:#aaa;margin-bottom:10px}
+h1{font-size:35px;line-height:1.05;font-weight:900;letter-spacing:-1px}
+h2{font-size:21px;letter-spacing:1px;margin-bottom:17px}
+h3{font-size:16px}
+p{color:#aaa;line-height:1.5;font-size:13px}
+.white-button{
+  display:inline-block;border:1px solid white;background:white;
+  color:#080808;padding:13px 18px;font-weight:bold;
+  font-size:10px;letter-spacing:1.5px;text-decoration:none;
+}
+.outline-button{
+  display:inline-block;border:1px solid #555;background:transparent;
+  color:white;padding:12px 16px;font-size:10px;letter-spacing:1px;
+}
+.hero{
+  min-height:490px;position:relative;display:flex;
+  align-items:flex-end;padding:30px 22px;
+  background:
+  linear-gradient(0deg,rgba(0,0,0,.92),transparent 75%),
+  url("https://images.unsplash.com/photo-1544191696-15693072b5a2?auto=format&fit=crop&w=1400&q=85") center/cover;
+}
+.hero-content{max-width:440px}
+.hero h1{font-size:48px;letter-spacing:-2px}
+.hero p{color:#ddd;margin:14px 0 20px;max-width:300px}
+.hero-tag{font-size:10px;letter-spacing:4px;margin-bottom:12px}
+.category-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.category-card{
+  height:205px;position:relative;overflow:hidden;
+  background:#181818;text-align:left;border:0;
+}
+.category-card:first-child{grid-column:span 2;height:235px}
+.category-card img{height:100%;transition:transform .5s;filter:brightness(.72)}
+.category-card:active img{transform:scale(1.04)}
+.category-card .category-label{
+  position:absolute;left:14px;bottom:14px;
+  font-size:23px;font-weight:900;letter-spacing:1px;
+  text-shadow:0 2px 10px #000;
+}
+.category-card small{
+  display:block;font-size:9px;letter-spacing:2px;
+  font-weight:normal;margin-bottom:5px;
+}
+.news-list{display:grid;gap:12px}
+.news-card{
+  display:grid;grid-template-columns:115px 1fr;
+  min-height:105px;background:#111;border:1px solid #222;
+  text-decoration:none;color:white;overflow:hidden;
+}
+.news-card img{height:100%;min-height:105px}
+.news-card div{padding:12px}
+.news-card small{font-size:9px;color:#aaa;letter-spacing:1px}
+.news-card h3{font-size:13px;line-height:1.35;margin:7px 0}
+.news-card p{font-size:11px}
+.section-heading{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:17px;
+}
+.section-heading span{font-size:9px;color:#999;letter-spacing:2px}
+.community-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.community-card{background:#111;border:1px solid #222;padding:17px;min-height:125px}
+.community-card strong{display:block;font-size:14px;margin-bottom:9px}
+.community-card p{font-size:11px}
 
 /* MENU */
-
-.menu-overlay{position:fixed;inset:0;background:#000a;z-index:40;opacity:0;visibility:hidden;transition:.3s}
-.menu-overlay.open{opacity:1;visibility:visible}
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.65);
+  z-index:40;opacity:0;pointer-events:none;transition:.3s;
+}
+.overlay.open{opacity:1;pointer-events:auto}
 .drawer{
-position:fixed;top:0;left:0;width:75%;max-width:360px;height:100dvh;
-z-index:41;background:#101010;border-right:1px solid #333;
-transform:translateX(-105%);transition:.35s;padding:30px 23px;
-display:flex;flex-direction:column
+  position:fixed;z-index:50;left:0;top:0;bottom:0;
+  width:76%;max-width:340px;background:#101010;
+  border-right:1px solid #333;padding:28px 22px;
+  transform:translateX(-105%);transition:transform .35s ease;
 }
 .drawer.open{transform:translateX(0)}
-.drawer-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:45px}
-.drawer-logo{font-size:32px;font-weight:1000;letter-spacing:5px}
-.close-menu{background:none;border:0;color:white;font-size:28px}
-.drawer-label{font-size:10px;letter-spacing:4px;color:#777;margin-bottom:15px}
-.menu-links{display:flex;flex-direction:column}
-.menu-links button{
-background:none;border:0;color:#999;text-align:left;
-padding:16px 7px;font-size:15px;border-bottom:1px solid #252525;transition:.2s
+.drawer-head{margin:20px 0 45px}
+.drawer-head strong{font-size:30px;letter-spacing:6px}
+.drawer-head p{font-size:9px;letter-spacing:3px;margin-top:6px}
+.drawer nav{display:grid;gap:0}
+.drawer nav button{
+  background:none;border:0;border-bottom:1px solid #242424;
+  text-align:left;padding:17px 0;font-size:13px;
+  letter-spacing:1px;
 }
-.menu-links button span{display:inline-block;width:35px;font-size:19px}
-.menu-links button.selected,.menu-links button:hover{color:white;padding-left:15px}
-.drawer-bottom{margin-top:auto;padding-top:20px;border-top:1px solid #292929;color:#777;font-size:10px;letter-spacing:3px}
+.drawer nav button.selected{color:white;font-weight:bold}
+.drawer-footer{position:absolute;bottom:28px;font-size:9px;color:#777;letter-spacing:2px}
 
-/* ACCUEIL */
-
-.hero{
-height:calc(100svh - 68px);min-height:530px;
-position:relative;display:flex;align-items:flex-end;padding:35px 7%;
-background:linear-gradient(0deg,#080808 0%,transparent 80%),
-url('https://images.unsplash.com/photo-1544191696-15693072b4a9?auto=format&fit=crop&w=1800&q=90') center/cover
+/* MAP */
+.map-tools{
+  padding:14px 15px;background:#090909;
+  border-bottom:1px solid #252525;
 }
-.hero-content{max-width:650px}
-.hero-tag{font-size:10px;letter-spacing:5px;color:#ccc}
-.hero h1{font-size:clamp(65px,12vw,125px);line-height:.85;letter-spacing:-5px;margin:25px 0;font-weight:1000}
-.hero p{color:#ccc;font-size:13px;line-height:1.8;max-width:420px}
-.main-button{margin-top:25px;padding:15px 23px;border:1px solid white;background:none;color:white;font-size:11px;letter-spacing:3px}
-.main-button:hover{background:white;color:black}
-.section{padding:65px 7%}
-.section-title{font-size:29px;font-weight:900;letter-spacing:2px;margin-bottom:30px}
-.section-subtitle{font-size:11px;color:#777;margin-top:-20px;margin-bottom:25px}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.image-card{height:260px;position:relative;overflow:hidden;background:#171717;cursor:pointer}
-.image-card img{width:100%;height:100%;object-fit:cover;opacity:.7;transition:.4s}
-.image-card:hover img{transform:scale(1.06);opacity:1}
-.image-card h3{position:absolute;bottom:20px;left:18px;letter-spacing:2px}
-.news-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.news-card{padding:25px;background:#141414;border:1px solid #292929}
-.news-card h3{margin-bottom:12px}
-.news-card p{color:#999;font-size:13px;line-height:1.7}
-
-/* CARTE */
-
-#mapPage{height:calc(100svh - 68px);min-height:0;overflow:hidden}
-.map-heading{height:54px;padding:0 20px;display:flex;align-items:center}
-.map-heading h2{font-size:19px;letter-spacing:1px}
-.map-toolbar{
-min-height:48px;display:flex;align-items:center;gap:23px;
-padding:8px 20px;overflow-x:auto;white-space:nowrap;
-background:#080808;border-top:1px solid #202020;border-bottom:1px solid #292929;
-position:relative;z-index:3
+.map-actions{display:flex;gap:17px;overflow-x:auto;padding-bottom:13px}
+.map-actions button,.filters button{
+  background:none;border:0;white-space:nowrap;
+  font-size:10px;letter-spacing:1px;color:#ddd;
 }
-.map-toolbar button{
-flex:none;background:none;border:0;color:white;
-font-size:10px;letter-spacing:1px;padding:5px 0;
-text-decoration:none
-}
-.map-toolbar button:active,.map-toolbar button.selected{
-text-decoration:underline;text-underline-offset:6px
-}
-#map{width:100%;height:calc(100% - 102px);background:#171717;z-index:1}
-.leaflet-control-attribution{font-size:8px!important}
+.filters{display:flex;gap:17px;overflow-x:auto}
+.filters button{color:#888;padding:4px 0}
+.filters button.active{color:white;border-bottom:1px solid white}
+#map{height:calc(100vh - 210px);min-height:430px;background:#222}
+.leaflet-container{background:#222}
+.map-note{font-size:10px;padding:9px 14px;color:#999;background:#101010}
 
-/* SHOP */
-
-.shop-intro{padding:35px 6% 20px}
-.shop-intro h1{font-size:36px;letter-spacing:3px;font-weight:1000}
-.shop-intro p{color:#888;font-size:12px;margin-top:10px;line-height:1.6}
-.shop-categories{
-display:flex;gap:23px;padding:20px 6%;overflow-x:auto;
-white-space:nowrap;border-bottom:1px solid #292929
+/* OTHER PAGES */
+.page-title{padding:27px 20px 18px}
+.page-title h1{font-size:30px}
+.empty-state{
+  margin:15px 18px;padding:30px 20px;
+  border:1px solid #292929;background:#101010;
 }
-.shop-categories button{
-background:none;border:0;color:#888;font-size:11px;letter-spacing:1px;
-padding:7px 0;flex:none
-}
-.shop-categories button.active{color:white;border-bottom:1px solid white}
-.shop-feature{
-margin:25px 6%;height:200px;position:relative;overflow:hidden;
-background:linear-gradient(0deg,#000b,transparent),
-url('https://images.unsplash.com/photo-1511994298241-608e28f14fde?auto=format&fit=crop&w=1200&q=85') center/cover;
-display:flex;align-items:flex-end;padding:22px
-}
-.shop-feature h2{font-size:27px;letter-spacing:2px}
-.shop-feature p{font-size:11px;color:#ccc;margin-top:8px}
-.shop-grid{
-padding:10px 6% 60px;display:grid;
-grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 12px
-}
-.product{min-width:0;cursor:pointer}
-.product-image{height:190px;background:#171717;overflow:hidden}
-.product-image img{width:100%;height:100%;object-fit:cover;transition:.3s}
-.product:hover img{transform:scale(1.04)}
-.product-category{color:#888;font-size:9px;letter-spacing:2px;margin-top:12px}
-.product h3{font-size:13px;margin-top:7px;line-height:1.4}
-.product-price{font-size:12px;margin-top:8px;color:#ccc}
-.product-detail{
-display:none;position:fixed;inset:0;background:#080808;
-z-index:50;overflow-y:auto;padding:25px
-}
-.product-detail.open{display:block}
-.detail-close{background:none;color:white;border:0;font-size:28px;margin-bottom:20px}
-.detail-image{width:100%;height:330px;object-fit:cover}
-.detail-name{font-size:27px;margin:20px 0 10px}
-.detail-price{color:#bbb;font-size:17px}
-.detail-description{color:#999;line-height:1.7;font-size:13px;margin-top:20px}
-
-/* GROUPES */
-
-.group-list{padding:15px 6%;display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.group-card{background:#141414;border:1px solid #292929;padding:24px}
-.group-card h3{font-size:16px;margin-bottom:10px}
-.group-card p{font-size:12px;color:#999;line-height:1.6}
-.action-button{margin-top:20px;padding:12px 15px;border:1px solid #555;background:none;color:white;font-size:10px;letter-spacing:2px}
-
-/* VIDEOS */
-
-.video-header{padding:22px 6%;display:flex;justify-content:space-between;align-items:center}
-.video-tabs{display:flex;gap:18px}
-.video-tabs button{background:none;border:0;color:#888;font-size:10px}
+.empty-state h3{margin-bottom:9px}
+.video-tabs{display:flex;gap:22px;padding:15px 20px;border-bottom:1px solid #222}
+.video-tabs button{background:none;border:0;color:#888;font-size:11px}
 .video-tabs button.active{color:white}
-.video-feed{max-width:520px;margin:auto;padding:10px 12px 80px}
-.video-card{height:min(72svh,700px);min-height:420px;position:relative;margin-bottom:20px;background:#171717;overflow:hidden}
-.video-background{width:100%;height:100%;object-fit:cover;opacity:.8}
-.video-gradient{position:absolute;inset:0;background:linear-gradient(0deg,#000d,transparent 60%)}
-.video-info{position:absolute;bottom:25px;left:20px;right:70px}
-.video-info h3{margin-bottom:8px}
-.video-info p{font-size:12px;color:#ccc}
-.video-side{position:absolute;right:15px;bottom:30px;display:flex;flex-direction:column;gap:15px;text-align:center}
-.video-side button{background:none;border:0;color:white;font-size:23px}
-.video-side small{font-size:10px}
-.create-video{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);width:55px;height:55px;border-radius:50%;border:1px solid white;background:#080808;color:white;font-size:27px;z-index:15}
-
-/* PROFIL ET PARAMETRES */
-
-.profile-top{text-align:center;padding:55px 20px}
-.avatar{height:95px;width:95px;border:1px solid #777;border-radius:50%;margin:0 auto 20px;display:grid;place-items:center;font-size:35px}
-.profile-top h2{letter-spacing:3px}
-.profile-top p{color:#888;font-size:11px;margin-top:10px}
-.profile-stats{display:flex;justify-content:center;gap:40px;margin-top:30px}
-.profile-stats strong{display:block;font-size:22px}
-.profile-stats span{font-size:9px;color:#888}
-.profile-options,.settings{max-width:620px;margin:auto;padding:10px 25px}
-.profile-options button{width:100%;padding:20px 5px;background:none;color:white;border:0;border-bottom:1px solid #292929;text-align:left}
-.setting-row{display:flex;align-items:center;justify-content:space-between;padding:22px 5px;border-bottom:1px solid #292929;font-size:13px}
-.setting-row span{display:block;color:#888;font-size:11px;margin-top:5px}
-.toggle{width:42px;height:23px;border:0;border-radius:30px;background:#444;position:relative}
-.toggle:after{content:"";position:absolute;width:17px;height:17px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s}
-.toggle.on{background:white}
-.toggle.on:after{left:22px;background:black}
-
-footer{padding:30px;text-align:center;border-top:1px solid #222;color:#777;font-size:10px;letter-spacing:3px}
-
-@media(max-width:700px){
-.header-right{font-size:8px}
-.hero{padding:25px 22px}
-.hero h1{font-size:76px}
-.section{padding:50px 20px}
-.section-title{font-size:25px}
-.cards{grid-template-columns:1fr 1fr;gap:10px}
-.image-card{height:185px}
-.image-card h3{font-size:14px;left:12px;bottom:12px}
-.news-grid{grid-template-columns:1fr}
-.group-list{grid-template-columns:1fr;padding:10px 20px}
-.shop-intro{padding:30px 20px}
-.shop-intro h1{font-size:32px}
-.shop-categories{padding:17px 20px;gap:20px}
-.shop-feature{margin:20px;height:170px}
-.shop-grid{grid-template-columns:1fr 1fr;padding:10px 15px 50px;gap:20px 12px}
-.product-image{height:175px}
-.video-header{padding:20px}
+.video-placeholder{
+  height:65vh;min-height:420px;margin:15px;
+  background:linear-gradient(0deg,#080808,transparent),url("https://images.unsplash.com/photo-1544191696-15693072b5a2?auto=format&fit=crop&w=1000&q=80") center/cover;
+  display:flex;align-items:flex-end;padding:20px;
+}
+.plus-button{
+  position:fixed;bottom:27px;left:50%;transform:translateX(-50%);
+  width:55px;height:55px;border-radius:50%;border:1px solid white;
+  background:rgba(0,0,0,.65);font-size:30px;z-index:15;
+}
+.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 15px}
+.shop-item{background:#111;border:1px solid #242424;padding-bottom:12px}
+.shop-item img{height:150px}
+.shop-item strong{display:block;font-size:12px;padding:10px 10px 4px}
+.shop-item small{padding:0 10px;color:#999}
+.shop-categories{display:flex;gap:17px;overflow:auto;padding:0 18px 20px}
+.shop-categories button{background:none;border:0;color:#aaa;white-space:nowrap;font-size:10px}
+.profile-cover{
+  height:190px;background:linear-gradient(0deg,#080808,transparent),url("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80") center/cover;
+}
+.profile-info{padding:0 20px 25px}
+.avatar{
+  width:75px;height:75px;border-radius:50%;background:#222;
+  border:3px solid #080808;margin-top:-38px;
+  display:grid;place-items:center;font-size:25px;font-weight:bold;
+}
+.profile-info h2{margin:12px 0 5px}
+.settings-list{padding:0 20px}
+.settings-list button{
+  width:100%;text-align:left;background:none;color:white;
+  border:0;border-bottom:1px solid #292929;padding:18px 0;
+  font-size:13px;
+}
+.toast{
+  position:fixed;bottom:25px;left:50%;transform:translateX(-50%);
+  background:#eee;color:#111;padding:12px 17px;font-size:12px;
+  z-index:100;display:none;max-width:90%;
+}
+@media(min-width:700px){
+  .section{max-width:950px;margin:auto;padding:35px 25px}
+  .hero{min-height:570px;padding-left:max(35px,calc((100vw - 950px)/2))}
+  .category-grid{grid-template-columns:repeat(3,1fr)}
+  .category-card:first-child{grid-column:span 1;height:240px}
+  .category-card{height:240px}
+  .news-list{grid-template-columns:repeat(2,1fr)}
+  #map{height:calc(100vh - 190px)}
 }
 </style>
 </head>
 
 <body>
-
-<header>
-<button class="menu-button" onclick="openMenu()">☰</button>
-<div class="logo">BOAR<small>RIDE YOUR LINE.</small></div>
-<div class="header-right">MTB / DH / ENDURO</div>
+<div id="app">
+<header class="topbar">
+  <button class="menu-button" onclick="openMenu()" aria-label="Ouvrir le menu">☰</button>
+  <div class="brand">BOAR<small>RIDE YOUR LINE.</small></div>
+  <button class="menu-button" onclick="showPage('profile')" aria-label="Profil">◯</button>
 </header>
 
-<div class="menu-overlay" id="overlay" onclick="closeMenu()"></div>
-
-<aside class="drawer" id="drawer">
-<div class="drawer-top">
-<div class="drawer-logo">BOAR</div>
-<button class="close-menu" onclick="closeMenu()">×</button>
-</div>
-<div class="drawer-label">NAVIGATION</div>
-<div class="menu-links">
-<button class="selected" onclick="go('home',this)"><span>⌂</span>Accueil</button>
-<button onclick="go('mapPage',this)"><span>◎</span>Carte</button>
-<button onclick="go('groups',this)"><span>♧</span>Groupes</button>
-<button onclick="go('videos',this)"><span>▷</span>Vidéos</button>
-<button onclick="go('shop',this)"><span>▣</span>Shop</button>
-<button onclick="go('profile',this)"><span>◉</span>Profil</button>
-<button onclick="go('settings',this)"><span>⚙</span>Paramètres</button>
-</div>
-<div class="drawer-bottom">BOAR © 2026<br><br>RIDE YOUR LINE.</div>
-</aside>
-
-<main>
-
 <!-- ACCUEIL -->
+<main id="home" class="page active">
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-tag">MOUNTAIN BIKE COMMUNITY</div>
+      <h1>RIDE<br>YOUR LINE.</h1>
+      <p>Découvre de nouveaux terrains, partage tes rides et retrouve la communauté BOAR.</p>
+      <button class="white-button" onclick="showPage('map')">EXPLORER LA CARTE</button>
+    </div>
+  </section>
 
-<div class="page active" id="home">
-<div class="hero">
-<div class="hero-content">
-<div class="hero-tag">THE MTB COMMUNITY</div>
-<h1>RIDE<br>YOUR<br>LINE.</h1>
-<p>Repousse tes limites. Découvre de nouveaux terrains. Partage tes rides et retrouve ta communauté.</p>
-<button class="main-button" onclick="go('mapPage')">EXPLORE BOAR ↗</button>
-</div>
-</div>
+  <section class="section">
+    <div class="section-heading">
+      <div><div class="eyebrow">TROUVE TON STYLE</div><h2>CHOOSE YOUR RIDE.</h2></div>
+      <span>01 / 03</span>
+    </div>
 
-<section class="section">
-<div class="section-title">CHOOSE YOUR RIDE.</div>
-<div class="cards">
-<div class="image-card" onclick="go('videos')">
-<img src="https://images.unsplash.com/photo-1544191696-15693072b4a9?auto=format&fit=crop&w=700&q=85">
-<h3>DOWNHILL</h3>
-</div>
-<div class="image-card" onclick="go('mapPage')">
-<img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=700&q=85">
-<h3>ENDURO</h3>
-</div>
-<div class="image-card" onclick="go('videos')">
-<img src="https://images.unsplash.com/photo-1511994298241-608e28f14fde?auto=format&fit=crop&w=700&q=85">
-<h3>MTB</h3>
-</div>
-</div>
-</section>
+    <div class="category-grid">
+      <button class="category-card" onclick="selectCategory('DOWNHILL')">
+        <img src="https://images.unsplash.com/photo-1544191696-15693072b5a2?auto=format&fit=crop&w=1100&q=85" alt="VTT de descente">
+        <span class="category-label"><small>RACE / GRAVITY</small>DOWNHILL</span>
+      </button>
+      <button class="category-card" onclick="selectCategory('ENDURO')">
+        <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=800&q=85" alt="Sentier en montagne">
+        <span class="category-label"><small>TRAIL / MOUNTAIN</small>ENDURO</span>
+      </button>
+      <button class="category-card" onclick="selectCategory('DIRT')">
+        <img src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?auto=format&fit=crop&w=800&q=85" alt="Vélo tout terrain">
+        <span class="category-label"><small>JUMP / STYLE</small>DIRT</span>
+      </button>
+    </div>
+  </section>
 
-<section class="section">
-<div class="section-title">THE BOAR COMMUNITY.</div>
-<div class="news-grid">
-<div class="news-card">
-<h3>DISCOVER SPOTS.</h3>
-<p>Découvre les terrains et les spots autour de toi.</p>
-<button class="action-button" onclick="go('mapPage')">VOIR LA CARTE ↗</button>
-</div>
-<div class="news-card">
-<h3>SHARE YOUR RIDE.</h3>
-<p>Partage tes vidéos et découvre les autres riders.</p>
-<button class="action-button" onclick="go('videos')">VOIR LES VIDÉOS ↗</button>
-</div>
-</div>
-</section>
-</div>
+  <section class="section">
+    <div class="section-heading">
+      <div><div class="eyebrow">LE MONDE DU VTT</div><h2>ACTUALITÉS VÉLO.</h2></div>
+      <span>NEWS</span>
+    </div>
+    <div class="news-list">
+      <a class="news-card" href="https://www.pinkbike.com/news/" target="_blank" rel="noopener">
+        <img src="https://images.unsplash.com/photo-1544191696-15693072b5a2?auto=format&fit=crop&w=500&q=80" alt="VTT en montagne">
+        <div><small>PINKBIKE · ACTUALITÉS</small><h3>Les dernières nouvelles du monde du VTT</h3><p>Courses, riders, nouveautés et événements.</p></div>
+      </a>
+      <a class="news-card" href="https://www.pinkbike.com/news/tags/downhill/" target="_blank" rel="noopener">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=500&q=80" alt="Sport VTT">
+        <div><small>DOWNHILL · COMPÉTITION</small><h3>Tout suivre sur la descente</h3><p>Résultats, compétitions et actualités DH.</p></div>
+      </a>
+      <a class="news-card" href="https://www.vitalmtb.com/" target="_blank" rel="noopener">
+        <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=500&q=80" alt="Sentier VTT">
+        <div><small>VITAL MTB · RIDING</small><h3>La culture VTT et les nouveautés</h3><p>Vélos, tests, vidéos et vie de la communauté.</p></div>
+      </a>
+      <a class="news-card" href="https://www.uci.org/mountain-bike" target="_blank" rel="noopener">
+        <img src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?auto=format&fit=crop&w=500&q=80" alt="Vélo tout terrain">
+        <div><small>UCI · COMPÉTITION</small><h3>Les compétitions internationales</h3><p>Retrouve les informations officielles du VTT.</p></div>
+      </a>
+    </div>
+    <p style="margin-top:12px;font-size:10px">Les liens ouvrent les sites des médias. Les articles ne sont pas encore importés automatiquement dans BOAR.</p>
+  </section>
 
-<!-- CARTE -->
-
-<div class="page" id="mapPage">
-<div class="map-heading"><h2>EXPLORE THE MAP.</h2></div>
-
-<div class="map-toolbar">
-<button onclick="addTerrain()">+ AJOUTER UN TERRAIN</button>
-<button onclick="addTrail()">+ AJOUTER UNE PISTE</button>
-<button onclick="createRoute()">+ CRÉER UNE TRACE</button>
-</div>
-
-<div class="map-filters map-toolbar">
-<button class="selected" onclick="setFilter('all',this)">TOUS</button>
-<button onclick="setFilter('public',this)">PUBLICS</button>
-<button onclick="setFilter('private',this)">PRIVÉS</button>
-<button onclick="setFilter('route',this)">TRACÉS</button>
-</div>
-
-<div id="map"></div>
-</div>
-
-<!-- SHOP -->
-
-<div class="page" id="shop">
-
-<div class="shop-intro">
-<h1>BOAR SHOP.</h1>
-<p>ÉQUIPEMENT · PIÈCES · VÊTEMENTS · ACCESSOIRES<br>Tout pour vivre ta passion du VTT.</p>
-</div>
-
-<div class="shop-categories">
-<button class="active" onclick="shopFilter('all',this)">TOUT</button>
-<button onclick="shopFilter('Vélos',this)">VÉLOS</button>
-<button onclick="shopFilter('Casques',this)">CASQUES</button>
-<button onclick="shopFilter('Protections',this)">PROTECTIONS</button>
-<button onclick="shopFilter('Vêtements',this)">VÊTEMENTS</button>
-<button onclick="shopFilter('Pièces',this)">PIÈCES</button>
-<button onclick="shopFilter('Accessoires',this)">ACCESSOIRES</button>
-<button onclick="shopFilter('Vidéos',this)">VIDÉOS</button>
-</div>
-
-<div class="shop-feature">
-<div>
-<h2>RIDE WITH STYLE.</h2>
-<p>Découvre l'univers équipement BOAR.</p>
-</div>
-</div>
-
-<div class="shop-grid" id="shopGrid">
-
-<div class="product" data-category="Vélos" onclick="productDetail('VTT Enduro','Vélos','VTT conçu pour les aventures en montagne.')">
-<div class="product-image"><img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=600&q=80"></div>
-<div class="product-category">VÉLOS</div><h3>VTT Enduro</h3><div class="product-price">Voir le produit ↗</div>
-</div>
-
-<div class="product" data-category="Casques" onclick="productDetail('Casque intégral','Casques','Protection intégrale pour les sorties DH.')">
-<div class="product-image"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=80"></div>
-<div class="product-category">CASQUES</div><h3>Casque intégral</h3><div class="product-price">Voir le produit ↗</div>
-</div>
-
-<div class="product" data-category="Protections" onclick="productDetail('Protections VTT','Protections','Équipements de protection pour le VTT.')">
-<div class="product-image"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"></div>
-<div class="product-category">PROTECTIONS</div><h3>Protections VTT</h3><div class="product-price">Voir le produit ↗</div>
-</div>
-
-<div class="product" data-category="Vêtements" onclick="productDetail('Maillot DH','Vêtements','Maillot de descente et équipement textile.')">
-<div class="product-image"><img src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=600&q=80"></div>
-<div class="product-category">VÊTEMENTS</div><h3>Maillot DH</h3><div class="product-price">Voir le produit ↗</div>
-</div>
-
-<div class="product" data-category="Pièces" onclick="productDetail('Pièces vélo','Pièces','Composants et pièces pour ton vélo.')">
-<div class="product-image"><img src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=600&q=80"></div>
-<div class="product-category">PIÈCES</div><h3>Composants vélo</h3><div class="product-price">Voir le produit ↗</div>
-</div>
-
-<div class="product" data-category="Accessoires" onclick="productDetail('Accessoires MTB','Accessoires','Accessoires utiles pour tes sessions.')">
-<div class="product-image"><img src="https://images.unsplash.com/photo-1511994298241-608e28f14fde?auto=format&fit=crop&w=600&q=80"></div>
-<div class="product-category">ACCESSOIRES</div><h3>Accessoires MTB</h3><div class="product-price">Voir le produit ↗</div>
-</div>
-
-<div class="product" data-category="Vidéos" onclick="productDetail('Vidéos produits','Vidéos','Présentations et démonstrations de matériel VTT.')">
-<div class="product-image"><img src="https://images.unsplash.com/photo-1544191696-15693072b4a9?auto=format&fit=crop&w=600&q=80"></div>
-<div class="product-category">VIDÉOS</div><h3>Vidéos produits</h3><div class="product-price">Découvrir ↗</div>
-</div>
-
-</div>
-</div>
-
-<!-- FICHE PRODUIT -->
-
-<div class="product-detail" id="productDetail">
-<button class="detail-close" onclick="closeProduct()">←</button>
-<img class="detail-image" id="detailImage" src="https://images.unsplash.com/photo-1511994298241-608e28f14fde?auto=format&fit=crop&w=900&q=80">
-<div class="product-category" id="detailCategory"></div>
-<h2 class="detail-name" id="detailName"></h2>
-<div class="detail-price">Informations produit</div>
-<p class="detail-description" id="detailDescription"></p>
-</div>
-
-<!-- GROUPES -->
-
-<div class="page" id="groups">
-<section class="section">
-<div class="section-title">YOUR CREW.</div>
-<p class="section-subtitle">RETROUVE TES RIDERS.</p>
-<div class="group-list">
-<div class="group-card"><h3>MES GROUPES</h3><p>Retrouve tes groupes et tes amis.</p><button class="action-button" onclick="alert('Les groupes seront connectés ultérieurement.')">MES GROUPES ↗</button></div>
-<div class="group-card"><h3>MESSAGES</h3><p>Discute avec les autres riders.</p><button class="action-button" onclick="alert('La messagerie sera connectée ultérieurement.')">MESSAGES ↗</button></div>
-<div class="group-card"><h3>REJOINDRE</h3><p>Découvre de nouvelles communautés.</p><button class="action-button" onclick="alert('La recherche sera connectée ultérieurement.')">DÉCOUVRIR ↗</button></div>
-<div class="group-card"><h3>CRÉER UN GROUPE</h3><p>Rassemble tes amis.</p><button class="action-button" onclick="alert('La création sera connectée ultérieurement.')">CRÉER ↗</button></div>
-</div>
-</section>
-</div>
-
-<!-- VIDEOS -->
-
-<div class="page" id="videos">
-<div class="video-header">
-<h2>VIDEOS.</h2>
-<div class="video-tabs">
-<button class="active" onclick="videoTab('discover',this)">DÉCOUVRIR</button>
-<button onclick="videoTab('following',this)">ABONNEMENTS</button>
-</div>
-</div>
-<div class="video-feed">
-<div class="video-card">
-<img class="video-background" src="https://images.unsplash.com/photo-1544191696-15693072b4a9?auto=format&fit=crop&w=900&q=85">
-<div class="video-gradient"></div>
-<div class="video-info"><h3>@RIDER_BOAR</h3><p>Nouvelle session DH. #BOAR #DH</p></div>
-<div class="video-side"><button onclick="likeVideo(this)">♡</button><small>J'aime</small><button onclick="alert('Partage à connecter.')">↗</button><small>Partager</small></div>
-</div>
-<div class="video-card">
-<img class="video-background" src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=900&q=85">
-<div class="video-gradient"></div>
-<div class="video-info"><h3>@MTB_RIDER</h3><p>Session enduro. #ENDURO</p></div>
-<div class="video-side"><button onclick="likeVideo(this)">♡</button><small>J'aime</small><button onclick="alert('Partage à connecter.')">↗</button><small>Partager</small></div>
-</div>
-</div>
-<button class="create-video" onclick="alert('Envoi de vidéos à connecter.')">+</button>
-</div>
-
-<!-- PROFIL -->
-
-<div class="page" id="profile">
-<div class="profile-top">
-<div class="avatar">B</div>
-<h2>MON PROFIL</h2>
-<p>RIDER BOAR · NOUVEAU MEMBRE</p>
-<div class="profile-stats">
-<div><strong>0</strong><span>VIDÉOS</span></div>
-<div><strong>0</strong><span>ABONNÉS</span></div>
-<div><strong>0</strong><span>ABONNEMENTS</span></div>
-</div>
-</div>
-<div class="profile-options">
-<button onclick="alert('Modification du profil à connecter.')">✎ &nbsp; Modifier mon profil</button>
-<button onclick="go('videos')">▷ &nbsp; Mes vidéos</button>
-<button onclick="go('groups')">♧ &nbsp; Mes groupes</button>
-<button onclick="go('shop')">▣ &nbsp; BOAR Shop</button>
-<button onclick="go('settings')">⚙ &nbsp; Paramètres</button>
-</div>
-</div>
-
-<!-- PARAMETRES -->
-
-<div class="page" id="settings">
-<section class="section">
-<div class="section-title">SETTINGS.</div>
-<div class="settings">
-<div class="setting-row"><div>Notifications<span>Notifications de l'application</span></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
-<div class="setting-row"><div>Confidentialité<span>Visibilité de ton profil</span></div><button class="action-button" onclick="alert('Réglages à connecter.')">GÉRER</button></div>
-<div class="setting-row"><div>Localisation<span>Gestion de la position</span></div><button class="action-button" onclick="alert('Autorisations à connecter.')">GÉRER</button></div>
-</div>
-</section>
-</div>
-
+  <section class="section">
+    <div class="eyebrow">LA COMMUNAUTÉ BOAR</div>
+    <h2>RIDE TOGETHER.</h2>
+    <div class="community-grid">
+      <div class="community-card"><strong>DISCOVER SPOTS.</strong><p>Découvre des terrains, bike parks et pistes près de chez toi.</p></div>
+      <div class="community-card"><strong>SHARE YOUR RIDE.</strong><p>Partage tes vidéos et tes meilleures sessions avec les autres riders.</p></div>
+    </div>
+  </section>
 </main>
 
-<footer>BOAR © 2026 — RIDE YOUR LINE.</footer>
+<!-- CARTE -->
+<main id="mapPage" class="page">
+  <div class="page-title"><div class="eyebrow">EXPLORE THE WORLD</div><h1>CARTE.</h1></div>
+  <div class="map-tools">
+    <div class="map-actions">
+      <button onclick="demoAction('Ajouter un terrain')">+ AJOUTER UN TERRAIN</button>
+      <button onclick="demoAction('Ajouter une piste')">+ AJOUTER UNE PISTE</button>
+      <button onclick="demoAction('Créer une trace')">+ CRÉER UNE TRACE</button>
+    </div>
+    <div class="filters">
+      <button class="active" onclick="setFilter(this,'all')">TOUS</button>
+      <button onclick="setFilter(this,'public')">PUBLICS</button>
+      <button onclick="setFilter(this,'private')">PRIVÉS</button>
+      <button onclick="setFilter(this,'track')">TRACÉS</button>
+    </div>
+  </div>
+  <div id="map"></div>
+  <div class="map-note">Carte de démonstration · Les spots affichés sont fictifs.</div>
+</main>
+
+<!-- GROUPES -->
+<main id="groups" class="page">
+  <div class="page-title"><div class="eyebrow">RIDE WITH YOUR CREW</div><h1>GROUPES.</h1></div>
+  <div class="empty-state">
+    <div class="eyebrow">BOAR COMMUNITY</div>
+    <h3>Retrouve tes riders.</h3>
+    <p>Crée un groupe, invite tes amis et organisez vos prochaines sorties ensemble.</p>
+    <button class="white-button" style="margin-top:20px" onclick="demoAction('Créer un groupe')">+ CRÉER UN GROUPE</button>
+  </div>
+</main>
+
+<!-- VIDEOS -->
+<main id="videos" class="page">
+  <div class="page-title"><div class="eyebrow">WATCH THE RIDE</div><h1>VIDÉOS.</h1></div>
+  <div class="video-tabs">
+    <button class="active" onclick="videoTab(this,'rides')">RIDES</button>
+    <button onclick="videoTab(this,'terrains')">TERRAINS</button>
+    <button onclick="videoTab(this,'following')">ABONNEMENTS</button>
+  </div>
+  <div class="video-placeholder">
+    <div><div class="eyebrow" id="videoCategory">BOAR RIDES</div><h2>YOUR NEXT RIDE.</h2><p>Les vidéos de la communauté apparaîtront ici.</p></div>
+  </div>
+  <button class="plus-button" onclick="demoAction('Publier une vidéo')">+</button>
+</main>
+
+<!-- SHOP -->
+<main id="shop" class="page">
+  <div class="page-title"><div class="eyebrow">GEAR / PARTS / CLOTHING</div><h1>SHOP.</h1></div>
+  <div class="shop-categories">
+    <button onclick="shopCategory('TOUT')">TOUT</button>
+    <button onclick="shopCategory('VÉLOS')">VÉLOS</button>
+    <button onclick="shopCategory('CASQUES')">CASQUES</button>
+    <button onclick="shopCategory('PROTECTIONS')">PROTECTIONS</button>
+    <button onclick="shopCategory('VÊTEMENTS')">VÊTEMENTS</button>
+    <button onclick="shopCategory('PIÈCES')">PIÈCES</button>
+    <button onclick="shopCategory('ACCESSOIRES')">ACCESSOIRES</button>
+  </div>
+  <div class="shop-grid" id="shopGrid">
+    <div class="shop-item" data-category="VÉLOS"><img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=600&q=80" alt="Vélo"><strong>VÉLOS</strong><small>Découvrir</small></div>
+    <div class="shop-item" data-category="CASQUES"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=80" alt="Équipement"><strong>CASQUES</strong><small>Découvrir</small></div>
+    <div class="shop-item" data-category="PROTECTIONS"><img src="https://images.unsplash.com/photo-1541625602330-2277b4c46182?auto=format&fit=crop&w=600&q=80" alt="VTT"><strong>PROTECTIONS</strong><small>Découvrir</small></div>
+    <div class="shop-item" data-category="VÊTEMENTS"><img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=600&q=80" alt="Cyclisme"><strong>VÊTEMENTS</strong><small>Découvrir</small></div>
+    <div class="shop-item" data-category="PIÈCES"><img src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=600&q=80" alt="Vélo"><strong>PIÈCES</strong><small>Découvrir</small></div>
+    <div class="shop-item" data-category="ACCESSOIRES"><img src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?auto=format&fit=crop&w=600&q=80" alt="Vélo"><strong>ACCESSOIRES</strong><small>Découvrir</small></div>
+  </div>
+</main>
+
+<!-- PROFIL -->
+<main id="profile" class="page">
+  <div class="profile-cover"></div>
+  <div class="profile-info">
+    <div class="avatar">B</div>
+    <h2>TON PROFIL</h2>
+    <p>@boar_rider · Nouveau rider</p>
+    <div class="community-grid" style="margin-top:22px">
+      <div class="community-card"><strong>0</strong><p>Vidéos</p></div>
+      <div class="community-card"><strong>0</strong><p>Abonnés</p></div>
+    </div>
+    <button class="outline-button" style="margin-top:20px" onclick="demoAction('Modifier le profil')">MODIFIER LE PROFIL</button>
+  </div>
+</main>
+
+<!-- PARAMÈTRES -->
+<main id="settings" class="page">
+  <div class="page-title"><div class="eyebrow">PERSONALISE BOAR</div><h1>PARAMÈTRES.</h1></div>
+  <div class="settings-list">
+    <button onclick="demoAction('Compte')">MON COMPTE　 →</button>
+    <button onclick="demoAction('Confidentialité')">CONFIDENTIALITÉ　 →</button>
+    <button onclick="demoAction('Notifications')">NOTIFICATIONS　 →</button>
+    <button onclick="demoAction('Localisation')">LOCALISATION　 →</button>
+    <button onclick="demoAction('Aide')">AIDE ET SUPPORT　 →</button>
+    <button onclick="demoAction('À propos de BOAR')">À PROPOS DE BOAR　 →</button>
+  </div>
+</main>
+</div>
+
+<!-- MENU COULISSANT -->
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <strong>BOAR</strong>
+    <p>RIDE YOUR LINE.</p>
+  </div>
+  <nav>
+    <button class="selected" onclick="navigate('home',this)">ACCUEIL</button>
+    <button onclick="navigate('mapPage',this)">CARTE</button>
+    <button onclick="navigate('groups',this)">GROUPES</button>
+    <button onclick="navigate('videos',this)">VIDÉOS</button>
+    <button onclick="navigate('shop',this)">SHOP</button>
+    <button onclick="navigate('profile',this)">PROFIL</button>
+    <button onclick="navigate('settings',this)">PARAMÈTRES</button>
+  </nav>
+  <div class="drawer-footer">BOAR © 2026 · RIDE YOUR LINE.</div>
+</aside>
+
+<div class="toast" id="toast"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
-
-/* NAVIGATION */
-
-function go(id,button){
-document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-const page=document.getElementById(id);
-if(!page)return;
-page.classList.add('active');
-document.querySelectorAll('.menu-links button').forEach(b=>b.classList.remove('selected'));
-if(button)button.classList.add('selected');
-closeMenu();
-window.scrollTo(0,0);
-if(id==='mapPage')setTimeout(initMap,200);
-}
-
-/* MENU */
-
 const drawer=document.getElementById('drawer');
 const overlay=document.getElementById('overlay');
-
-function openMenu(){drawer.classList.add('open');overlay.classList.add('open')}
-function closeMenu(){drawer.classList.remove('open');overlay.classList.remove('open')}
-
-let touchX=0,touchY=0;
-
-document.addEventListener('touchstart',e=>{
-touchX=e.touches[0].clientX;
-touchY=e.touches[0].clientY;
-},{passive:true});
-
-document.addEventListener('touchend',e=>{
-const dx=e.changedTouches[0].clientX-touchX;
-const dy=e.changedTouches[0].clientY-touchY;
-if(Math.abs(dy)>Math.abs(dx))return;
-if(touchX<35&&dx>90)openMenu();
-if(drawer.classList.contains('open')&&dx<-80)closeMenu();
-},{passive:true});
-
-/* CARTE SATELLITE */
-
 let map=null;
 let markers=[];
-let filter='all';
+let currentFilter='all';
 
-const spots=[
-{lat:50.625,lng:5.575,name:'Spot forestier',type:'public'},
-{lat:50.635,lng:5.590,name:'Terrain privé',type:'private'},
-{lat:50.615,lng:5.560,name:'Spot enduro',type:'public'},
-{lat:50.645,lng:5.550,name:'Trace VTT',type:'route'}
-];
-
+function openMenu(){
+  drawer.classList.add('open');
+  overlay.classList.add('open');
+}
+function closeMenu(){
+  drawer.classList.remove('open');
+  overlay.classList.remove('open');
+}
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const target=document.getElementById(id);
+  if(target)target.classList.add('active');
+  if(id==='mapPage')setTimeout(initMap,150);
+  window.scrollTo(0,0);
+}
+function navigate(id,button){
+  showPage(id);
+  document.querySelectorAll('.drawer nav button').forEach(b=>b.classList.remove('selected'));
+  if(button)button.classList.add('selected');
+  closeMenu();
+}
+function demoAction(name){
+  const toast=document.getElementById('toast');
+  toast.textContent=name+' : cette fonction sera connectée dans une prochaine version.';
+  toast.style.display='block';
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>toast.style.display='none',2800);
+}
+function selectCategory(name){
+  demoAction('Catégorie '+name);
+}
+function videoTab(button,name){
+  document.querySelectorAll('.video-tabs button').forEach(b=>b.classList.remove('active'));
+  button.classList.add('active');
+  const labels={rides:'BOAR RIDES',terrains:'TERRAIN PRESENTATIONS',following:'ABONNEMENTS'};
+  document.getElementById('videoCategory').textContent=labels[name];
+}
+function shopCategory(category){
+  document.querySelectorAll('.shop-item').forEach(item=>{
+    item.style.display=(category==='TOUT'||item.dataset.category===category)?'block':'none';
+  });
+}
 function initMap(){
-if(map){map.invalidateSize();return}
-if(!window.L)return;
+  if(map)return;
+  if(!window.L)return;
+  map=L.map('map',{zoomControl:true}).setView([50.4669,4.8675],8);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{
+    attribution:'Tiles © Esri'
+  }).addTo(map);
 
-map=L.map('map',{zoomControl:true}).setView([50.625,5.575],12);
-
-L.tileLayer(
-'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-{attribution:'Tiles © Esri'}
-).addTo(map);
-
-spots.forEach(s=>{
-const marker=L.marker([s.lat,s.lng]).bindPopup('<b>'+s.name+'</b>');
-marker.spotType=s.type;
-markers.push(marker);
-marker.addTo(map);
-});
+  const spots=[
+    {name:'Spot forestier (démo)',lat:50.4669,lng:4.8675,type:'public'},
+    {name:'Terrain privé (démo)',lat:50.42,lng:4.95,type:'private'},
+    {name:'Spot enduro (démo)',lat:50.52,lng:4.78,type:'public'},
+    {name:'Trace de démonstration',lat:50.49,lng:4.91,type:'track'}
+  ];
+  spots.forEach(spot=>{
+    const marker=L.marker([spot.lat,spot.lng]).addTo(map);
+    marker.bindPopup('<b>'+spot.name+'</b><br><small>Emplacement fictif de démonstration</small>');
+    marker.options.spotType=spot.type;
+    markers.push(marker);
+  });
+}
+function setFilter(button,filter){
+  currentFilter=filter;
+  document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+  button.classList.add('active');
+  markers.forEach(marker=>{
+    const visible=filter==='all'||marker.options.spotType===filter;
+    if(visible&&!map.hasLayer(marker))marker.addTo(map);
+    if(!visible&&map.hasLayer(marker))map.removeLayer(marker);
+  });
 }
 
-function setFilter(type,button){
-filter=type;
-document.querySelectorAll('.map-filters button').forEach(b=>b.classList.remove('selected'));
-button.classList.add('selected');
-if(!map)return;
-markers.forEach(m=>{
-if(type==='all'||m.spotType===type)m.addTo(map);
-else map.removeLayer(m);
-});
-}
-
-function addTerrain(){alert('La création de terrain sera développée dans la prochaine étape.')}
-function addTrail(){alert('L’ajout de pistes sera développé dans la prochaine étape.')}
-function createRoute(){alert('La création de traces sera développée dans la prochaine étape.')}
-
-/* SHOP */
-
-function shopFilter(category,button){
-document.querySelectorAll('.shop-categories button').forEach(b=>b.classList.remove('active'));
-button.classList.add('active');
-document.querySelectorAll('.product').forEach(p=>{
-p.style.display=category==='all'||p.dataset.category===category?'block':'none';
-});
-}
-
-function productDetail(name,category,description){
-document.getElementById('detailName').textContent=name;
-document.getElementById('detailCategory').textContent=category;
-document.getElementById('detailDescription').textContent=description;
-document.getElementById('productDetail').classList.add('open');
-}
-
-function closeProduct(){
-document.getElementById('productDetail').classList.remove('open');
-}
-
-/* VIDEOS */
-
-function likeVideo(button){
-button.textContent=button.textContent==='♡'?'♥':'♡';
-}
-
-function videoTab(tab,button){
-document.querySelectorAll('.video-tabs button').forEach(b=>b.classList.remove('active'));
-button.classList.add('active');
-if(tab==='following')alert('Les abonnements seront connectés avec les comptes BOAR.');
-}
-
+/* Ouvrir le menu avec un glissement depuis la gauche */
+let touchStartX=0,touchStartY=0;
+document.addEventListener('touchstart',e=>{
+  touchStartX=e.touches[0].clientX;
+  touchStartY=e.touches[0].clientY;
+},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-touchStartX;
+  const dy=e.changedTouches[0].clientY-touchStartY;
+  if(Math.abs(dy)>Math.abs(dx))return;
+  if(touchStartX<35&&dx>90)openMenu();
+  if(drawer.classList.contains('open')&&dx< -90)closeMenu();
+},{passive:true});
 </script>
-
 </body>
 </html>
