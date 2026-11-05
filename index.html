@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
-:root {
+:root{
   --bg:#080808;
   --panel:#111;
   --white:#f5f5f5;
@@ -19,48 +19,63 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
-  background:var(--bg);color:var(--white);
+  background:var(--bg);
+  color:var(--white);
   font-family:Arial,Helvetica,sans-serif;
   overflow-x:hidden;
 }
 button{font:inherit;color:inherit;cursor:pointer}
 img{display:block;width:100%;object-fit:cover}
-.hidden{display:none!important}
 #app{min-height:100vh;padding-bottom:35px}
 .topbar{
-  height:65px;padding:0 20px;display:flex;
-  align-items:center;justify-content:space-between;
+  height:65px;padding:0 20px;
+  display:flex;align-items:center;justify-content:space-between;
   position:sticky;top:0;z-index:20;
-  background:rgba(8,8,8,.94);backdrop-filter:blur(12px);
+  background:rgba(8,8,8,.94);
+  backdrop-filter:blur(12px);
   border-bottom:1px solid var(--line);
 }
 .brand{font-size:24px;font-weight:900;letter-spacing:5px}
-.brand small{display:block;font-size:8px;letter-spacing:3px;color:#aaa;margin-top:3px}
+.brand small{
+  display:block;font-size:8px;letter-spacing:3px;
+  color:#aaa;margin-top:3px
+}
 .menu-button{
   border:0;background:none;font-size:26px;
-  width:42px;height:42px;text-align:left;
+  width:42px;height:42px;text-align:left
 }
 .page{display:none;animation:appear .3s ease}
 .page.active{display:block}
-@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes appear{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
 .section{padding:25px 18px}
-.eyebrow{font-size:10px;letter-spacing:3px;color:#aaa;margin-bottom:10px}
+.eyebrow{
+  font-size:10px;letter-spacing:3px;
+  color:#aaa;margin-bottom:10px
+}
 h1{font-size:35px;line-height:1.05;font-weight:900;letter-spacing:-1px}
 h2{font-size:21px;letter-spacing:1px;margin-bottom:17px}
 h3{font-size:16px}
 p{color:#aaa;line-height:1.5;font-size:13px}
 .white-button{
-  display:inline-block;border:1px solid white;background:white;
-  color:#080808;padding:13px 18px;font-weight:bold;
-  font-size:10px;letter-spacing:1.5px;text-decoration:none;
+  display:inline-block;border:1px solid white;
+  background:white;color:#080808;
+  padding:13px 18px;font-weight:bold;
+  font-size:10px;letter-spacing:1.5px
 }
 .outline-button{
-  display:inline-block;border:1px solid #555;background:transparent;
-  color:white;padding:12px 16px;font-size:10px;letter-spacing:1px;
+  display:inline-block;border:1px solid #555;
+  background:transparent;color:white;
+  padding:12px 16px;font-size:10px;letter-spacing:1px
 }
+
+/* ACCUEIL */
 .hero{
-  min-height:490px;position:relative;display:flex;
-  align-items:flex-end;padding:30px 22px;
+  min-height:490px;
+  position:relative;display:flex;align-items:flex-end;
+  padding:30px 22px;
   background:
   linear-gradient(0deg,rgba(0,0,0,.92),transparent 75%),
   url("https://images.unsplash.com/photo-1544191696-15693072b5a2?auto=format&fit=crop&w=1400&q=85") center/cover;
@@ -69,156 +84,245 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 .hero h1{font-size:48px;letter-spacing:-2px}
 .hero p{color:#ddd;margin:14px 0 20px;max-width:300px}
 .hero-tag{font-size:10px;letter-spacing:4px;margin-bottom:12px}
-.category-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:10px;
-}
+.category-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .category-card{
   height:205px;position:relative;overflow:hidden;
-  background:#181818;text-align:left;border:0;
+  background:#181818;text-align:left;border:0
 }
 .category-card:first-child{grid-column:span 2;height:235px}
 .category-card img{height:100%;transition:transform .5s;filter:brightness(.72)}
-.category-card:active img{transform:scale(1.04)}
 .category-card .category-label{
   position:absolute;left:14px;bottom:14px;
-  font-size:23px;font-weight:900;letter-spacing:1px;
-  text-shadow:0 2px 10px #000;
+  font-size:23px;font-weight:900;
+  letter-spacing:1px;text-shadow:0 2px 10px #000
 }
 .category-card small{
   display:block;font-size:9px;letter-spacing:2px;
-  font-weight:normal;margin-bottom:5px;
+  font-weight:normal;margin-bottom:5px
 }
+.section-heading{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:17px
+}
+.section-heading span{font-size:9px;color:#999;letter-spacing:2px}
 .news-list{display:grid;gap:12px}
 .news-card{
   display:grid;grid-template-columns:115px 1fr;
-  min-height:105px;background:#111;border:1px solid #222;
-  text-decoration:none;color:white;overflow:hidden;
+  min-height:105px;background:#111;
+  border:1px solid #222;text-decoration:none;color:white;
+  overflow:hidden
 }
 .news-card img{height:100%;min-height:105px}
 .news-card div{padding:12px}
 .news-card small{font-size:9px;color:#aaa;letter-spacing:1px}
 .news-card h3{font-size:13px;line-height:1.35;margin:7px 0}
 .news-card p{font-size:11px}
-.section-heading{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:17px;
-}
-.section-heading span{font-size:9px;color:#999;letter-spacing:2px}
 .community-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.community-card{background:#111;border:1px solid #222;padding:17px;min-height:125px}
+.community-card{
+  background:#111;border:1px solid #222;
+  padding:17px;min-height:125px
+}
 .community-card strong{display:block;font-size:14px;margin-bottom:9px}
 .community-card p{font-size:11px}
 
 /* MENU */
 .overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.65);
-  z-index:40;opacity:0;pointer-events:none;transition:.3s;
+  z-index:40;opacity:0;pointer-events:none;transition:.3s
 }
 .overlay.open{opacity:1;pointer-events:auto}
 .drawer{
   position:fixed;z-index:50;left:0;top:0;bottom:0;
   width:76%;max-width:340px;background:#101010;
   border-right:1px solid #333;padding:28px 22px;
-  transform:translateX(-105%);transition:transform .35s ease;
+  transform:translateX(-105%);transition:transform .35s ease
 }
 .drawer.open{transform:translateX(0)}
 .drawer-head{margin:20px 0 45px}
 .drawer-head strong{font-size:30px;letter-spacing:6px}
 .drawer-head p{font-size:9px;letter-spacing:3px;margin-top:6px}
-.drawer nav{display:grid;gap:0}
+.drawer nav{display:grid}
 .drawer nav button{
   background:none;border:0;border-bottom:1px solid #242424;
-  text-align:left;padding:17px 0;font-size:13px;
-  letter-spacing:1px;
+  text-align:left;padding:17px 0;font-size:13px;letter-spacing:1px
 }
 .drawer nav button.selected{color:white;font-weight:bold}
-.drawer-footer{position:absolute;bottom:28px;font-size:9px;color:#777;letter-spacing:2px}
+.drawer-footer{
+  position:absolute;bottom:28px;
+  font-size:9px;color:#777;letter-spacing:2px
+}
 
-/* MAP */
+/* CARTE */
+.map-page-title{padding:20px 18px 14px}
+.map-page-title h1{font-size:30px}
 .map-tools{
-  padding:14px 15px;background:#090909;
-  border-bottom:1px solid #252525;
+  padding:13px 15px;background:#090909;
+  border-bottom:1px solid #252525
 }
-.map-actions{display:flex;gap:17px;overflow-x:auto;padding-bottom:13px}
-.map-actions button,.filters button{
+.map-actions{
+  display:flex;gap:17px;overflow-x:auto;
+  padding-bottom:13px
+}
+.map-actions button{
   background:none;border:0;white-space:nowrap;
-  font-size:10px;letter-spacing:1px;color:#ddd;
+  font-size:10px;letter-spacing:1px;color:#ddd
 }
-.filters{display:flex;gap:17px;overflow-x:auto}
-.filters button{color:#888;padding:4px 0}
-.filters button.active{color:white;border-bottom:1px solid white}
-#map{height:calc(100vh - 210px);min-height:430px;background:#222}
+.map-filters{
+  display:flex;gap:17px;overflow-x:auto;
+  padding-bottom:3px
+}
+.map-filters button{
+  background:none;border:0;white-space:nowrap;
+  color:#888;font-size:10px;padding:5px 0;
+  border-bottom:1px solid transparent
+}
+.map-filters button.active{
+  color:white;border-bottom:1px solid white
+}
+#map{
+  height:calc(100vh - 230px);
+  min-height:430px;background:#222
+}
 .leaflet-container{background:#222}
-.map-note{font-size:10px;padding:9px 14px;color:#999;background:#101010}
+.map-note{
+  font-size:10px;padding:10px 14px;
+  color:#999;background:#101010
+}
+.map-legend{
+  display:flex;gap:15px;flex-wrap:wrap;
+  padding:10px 14px;background:#101010;
+  border-top:1px solid #242424
+}
+.legend-item{
+  display:flex;align-items:center;gap:6px;
+  color:#aaa;font-size:10px
+}
+.legend-dot{
+  width:9px;height:9px;border-radius:50%;
+  background:white;display:inline-block
+}
+.legend-dot.park{background:#fff}
+.legend-dot.border{
+  width:14px;height:2px;border-radius:0;background:#ddd
+}
+.park-marker{
+  width:29px;height:29px;border-radius:50%;
+  background:#080808;border:2px solid white;
+  color:white;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:bold;
+  box-shadow:0 2px 9px rgba(0,0,0,.8)
+}
+.leaflet-popup-content-wrapper{
+  background:#111;color:#fff;border:1px solid #444;
+  border-radius:3px
+}
+.leaflet-popup-tip{background:#111}
+.leaflet-popup-content{margin:13px;min-width:155px}
+.popup-country{
+  color:#aaa;font-size:10px;
+  text-transform:uppercase;letter-spacing:1px;
+  margin-top:5px
+}
+.popup-tag{
+  display:inline-block;margin-top:9px;
+  padding:5px 7px;border:1px solid #555;
+  font-size:9px;letter-spacing:1px
+}
 
-/* OTHER PAGES */
+/* AUTRES PAGES */
 .page-title{padding:27px 20px 18px}
 .page-title h1{font-size:30px}
 .empty-state{
   margin:15px 18px;padding:30px 20px;
-  border:1px solid #292929;background:#101010;
+  border:1px solid #292929;background:#101010
 }
 .empty-state h3{margin-bottom:9px}
-.video-tabs{display:flex;gap:22px;padding:15px 20px;border-bottom:1px solid #222}
-.video-tabs button{background:none;border:0;color:#888;font-size:11px}
+.video-tabs{
+  display:flex;gap:22px;padding:15px 20px;
+  border-bottom:1px solid #222
+}
+.video-tabs button{
+  background:none;border:0;color:#888;font-size:11px
+}
 .video-tabs button.active{color:white}
 .video-placeholder{
   height:65vh;min-height:420px;margin:15px;
-  background:linear-gradient(0deg,#080808,transparent),url("https://images.unsplash.com/photo-1544191696-15693072b5a2?auto=format&fit=crop&w=1000&q=80") center/cover;
-  display:flex;align-items:flex-end;padding:20px;
+  background:
+  linear-gradient(0deg,#080808,transparent),
+  url("https://images.unsplash.com/photo-1544191696-15693072b5a2?auto=format&fit=crop&w=1000&q=80") center/cover;
+  display:flex;align-items:flex-end;padding:20px
 }
 .plus-button{
-  position:fixed;bottom:27px;left:50%;transform:translateX(-50%);
-  width:55px;height:55px;border-radius:50%;border:1px solid white;
-  background:rgba(0,0,0,.65);font-size:30px;z-index:15;
+  position:fixed;bottom:27px;left:50%;
+  transform:translateX(-50%);
+  width:55px;height:55px;border-radius:50%;
+  border:1px solid white;background:rgba(0,0,0,.65);
+  font-size:30px;z-index:15
 }
-.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 15px}
+.shop-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;padding:0 15px
+}
 .shop-item{background:#111;border:1px solid #242424;padding-bottom:12px}
 .shop-item img{height:150px}
 .shop-item strong{display:block;font-size:12px;padding:10px 10px 4px}
 .shop-item small{padding:0 10px;color:#999}
-.shop-categories{display:flex;gap:17px;overflow:auto;padding:0 18px 20px}
-.shop-categories button{background:none;border:0;color:#aaa;white-space:nowrap;font-size:10px}
+.shop-categories{
+  display:flex;gap:17px;overflow:auto;padding:0 18px 20px
+}
+.shop-categories button{
+  background:none;border:0;color:#aaa;
+  white-space:nowrap;font-size:10px
+}
 .profile-cover{
-  height:190px;background:linear-gradient(0deg,#080808,transparent),url("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80") center/cover;
+  height:190px;
+  background:
+  linear-gradient(0deg,#080808,transparent),
+  url("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80") center/cover
 }
 .profile-info{padding:0 20px 25px}
 .avatar{
-  width:75px;height:75px;border-radius:50%;background:#222;
-  border:3px solid #080808;margin-top:-38px;
-  display:grid;place-items:center;font-size:25px;font-weight:bold;
+  width:75px;height:75px;border-radius:50%;
+  background:#222;border:3px solid #080808;
+  margin-top:-38px;display:grid;place-items:center;
+  font-size:25px;font-weight:bold
 }
 .profile-info h2{margin:12px 0 5px}
 .settings-list{padding:0 20px}
 .settings-list button{
   width:100%;text-align:left;background:none;color:white;
-  border:0;border-bottom:1px solid #292929;padding:18px 0;
-  font-size:13px;
+  border:0;border-bottom:1px solid #292929;
+  padding:18px 0;font-size:13px
 }
 .toast{
-  position:fixed;bottom:25px;left:50%;transform:translateX(-50%);
-  background:#eee;color:#111;padding:12px 17px;font-size:12px;
-  z-index:100;display:none;max-width:90%;
+  position:fixed;bottom:25px;left:50%;
+  transform:translateX(-50%);
+  background:#eee;color:#111;padding:12px 17px;
+  font-size:12px;z-index:100;display:none;
+  max-width:90%;text-align:center
 }
 @media(min-width:700px){
   .section{max-width:950px;margin:auto;padding:35px 25px}
-  .hero{min-height:570px;padding-left:max(35px,calc((100vw - 950px)/2))}
+  .hero{
+    min-height:570px;
+    padding-left:max(35px,calc((100vw - 950px)/2))
+  }
   .category-grid{grid-template-columns:repeat(3,1fr)}
   .category-card:first-child{grid-column:span 1;height:240px}
   .category-card{height:240px}
   .news-list{grid-template-columns:repeat(2,1fr)}
-  #map{height:calc(100vh - 190px)}
+  #map{height:calc(100vh - 220px)}
 }
 </style>
 </head>
 
 <body>
 <div id="app">
+
 <header class="topbar">
-  <button class="menu-button" onclick="openMenu()" aria-label="Ouvrir le menu">☰</button>
+  <button class="menu-button" onclick="openMenu()">☰</button>
   <div class="brand">BOAR<small>RIDE YOUR LINE.</small></div>
-  <button class="menu-button" onclick="showPage('profile')" aria-label="Profil">◯</button>
+  <button class="menu-button" onclick="showPage('profile')">◯</button>
 </header>
 
 <!-- ACCUEIL -->
@@ -228,13 +332,16 @@ p{color:#aaa;line-height:1.5;font-size:13px}
       <div class="hero-tag">MOUNTAIN BIKE COMMUNITY</div>
       <h1>RIDE<br>YOUR LINE.</h1>
       <p>Découvre de nouveaux terrains, partage tes rides et retrouve la communauté BOAR.</p>
-      <button class="white-button" onclick="showPage('map')">EXPLORER LA CARTE</button>
+      <button class="white-button" onclick="showPage('mapPage')">EXPLORER LA CARTE</button>
     </div>
   </section>
 
   <section class="section">
     <div class="section-heading">
-      <div><div class="eyebrow">TROUVE TON STYLE</div><h2>CHOOSE YOUR RIDE.</h2></div>
+      <div>
+        <div class="eyebrow">TROUVE TON STYLE</div>
+        <h2>CHOOSE YOUR RIDE.</h2>
+      </div>
       <span>01 / 03</span>
     </div>
 
@@ -256,24 +363,27 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 
   <section class="section">
     <div class="section-heading">
-      <div><div class="eyebrow">LE MONDE DU VTT</div><h2>ACTUALITÉS VÉLO.</h2></div>
+      <div>
+        <div class="eyebrow">LE MONDE DU VTT</div>
+        <h2>ACTUALITÉS VÉLO.</h2>
+      </div>
       <span>NEWS</span>
     </div>
     <div class="news-list">
       <a class="news-card" href="https://www.pinkbike.com/news/" target="_blank" rel="noopener">
-        <img src="https://images.unsplash.com/photo-1544191696-15693072b5a2?auto=format&fit=crop&w=500&q=80" alt="VTT en montagne">
+        <img src="https://images.unsplash.com/photo-1544191696-15693072b5a2?auto=format&fit=crop&w=500&q=80" alt="VTT">
         <div><small>PINKBIKE · ACTUALITÉS</small><h3>Les dernières nouvelles du monde du VTT</h3><p>Courses, riders, nouveautés et événements.</p></div>
       </a>
       <a class="news-card" href="https://www.pinkbike.com/news/tags/downhill/" target="_blank" rel="noopener">
-        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=500&q=80" alt="Sport VTT">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=500&q=80" alt="VTT">
         <div><small>DOWNHILL · COMPÉTITION</small><h3>Tout suivre sur la descente</h3><p>Résultats, compétitions et actualités DH.</p></div>
       </a>
       <a class="news-card" href="https://www.vitalmtb.com/" target="_blank" rel="noopener">
-        <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=500&q=80" alt="Sentier VTT">
+        <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=500&q=80" alt="VTT">
         <div><small>VITAL MTB · RIDING</small><h3>La culture VTT et les nouveautés</h3><p>Vélos, tests, vidéos et vie de la communauté.</p></div>
       </a>
       <a class="news-card" href="https://www.uci.org/mountain-bike" target="_blank" rel="noopener">
-        <img src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?auto=format&fit=crop&w=500&q=80" alt="Vélo tout terrain">
+        <img src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?auto=format&fit=crop&w=500&q=80" alt="VTT">
         <div><small>UCI · COMPÉTITION</small><h3>Les compétitions internationales</h3><p>Retrouve les informations officielles du VTT.</p></div>
       </a>
     </div>
@@ -292,22 +402,40 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 
 <!-- CARTE -->
 <main id="mapPage" class="page">
-  <div class="page-title"><div class="eyebrow">EXPLORE THE WORLD</div><h1>CARTE.</h1></div>
+  <div class="map-page-title">
+    <div class="eyebrow">EXPLORE EUROPE</div>
+    <h1>CARTE.</h1>
+  </div>
+
   <div class="map-tools">
     <div class="map-actions">
       <button onclick="demoAction('Ajouter un terrain')">+ AJOUTER UN TERRAIN</button>
       <button onclick="demoAction('Ajouter une piste')">+ AJOUTER UNE PISTE</button>
       <button onclick="demoAction('Créer une trace')">+ CRÉER UNE TRACE</button>
     </div>
-    <div class="filters">
-      <button class="active" onclick="setFilter(this,'all')">TOUS</button>
-      <button onclick="setFilter(this,'public')">PUBLICS</button>
-      <button onclick="setFilter(this,'private')">PRIVÉS</button>
-      <button onclick="setFilter(this,'track')">TRACÉS</button>
+
+    <div class="map-filters">
+      <button class="active" onclick="filterParks('all',this)">TOUS</button>
+      <button onclick="filterParks('Belgique',this)">BELGIQUE</button>
+      <button onclick="filterParks('France',this)">FRANCE</button>
+      <button onclick="filterParks('Autriche',this)">AUTRICHE</button>
+      <button onclick="filterParks('Suisse',this)">SUISSE</button>
+      <button onclick="filterParks('Italie',this)">ITALIE</button>
+      <button onclick="filterParks('Allemagne',this)">ALLEMAGNE</button>
+      <button onclick="filterParks('Andorre',this)">ANDORRE</button>
     </div>
   </div>
+
   <div id="map"></div>
-  <div class="map-note">Carte de démonstration · Les spots affichés sont fictifs.</div>
+
+  <div class="map-legend">
+    <span class="legend-item"><i class="legend-dot park"></i> Bike park</span>
+    <span class="legend-item"><i class="legend-dot border"></i> Frontières des pays</span>
+  </div>
+
+  <div class="map-note">
+    Les marqueurs indiquent les domaines VTT. Les positions sont indicatives et ne représentent pas les entrées exactes des pistes.
+  </div>
 </main>
 
 <!-- GROUPES -->
@@ -330,7 +458,11 @@ p{color:#aaa;line-height:1.5;font-size:13px}
     <button onclick="videoTab(this,'following')">ABONNEMENTS</button>
   </div>
   <div class="video-placeholder">
-    <div><div class="eyebrow" id="videoCategory">BOAR RIDES</div><h2>YOUR NEXT RIDE.</h2><p>Les vidéos de la communauté apparaîtront ici.</p></div>
+    <div>
+      <div class="eyebrow" id="videoCategory">BOAR RIDES</div>
+      <h2>YOUR NEXT RIDE.</h2>
+      <p>Les vidéos de la communauté apparaîtront ici.</p>
+    </div>
   </div>
   <button class="plus-button" onclick="demoAction('Publier une vidéo')">+</button>
 </main>
@@ -384,9 +516,10 @@ p{color:#aaa;line-height:1.5;font-size:13px}
     <button onclick="demoAction('À propos de BOAR')">À PROPOS DE BOAR　 →</button>
   </div>
 </main>
+
 </div>
 
-<!-- MENU COULISSANT -->
+<!-- MENU -->
 <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 <aside class="drawer" id="drawer">
   <div class="drawer-head">
@@ -408,12 +541,14 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 <div class="toast" id="toast"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
 const drawer=document.getElementById('drawer');
 const overlay=document.getElementById('overlay');
+
 let map=null;
-let markers=[];
-let currentFilter='all';
+let parkMarkers=[];
+let currentParkFilter='all';
 
 function openMenu(){
   drawer.classList.add('open');
@@ -423,19 +558,28 @@ function closeMenu(){
   drawer.classList.remove('open');
   overlay.classList.remove('open');
 }
+
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const target=document.getElementById(id);
   if(target)target.classList.add('active');
-  if(id==='mapPage')setTimeout(initMap,150);
+
+  if(id==='mapPage'){
+    setTimeout(()=>{
+      initMap();
+      if(map)map.invalidateSize();
+    },200);
+  }
   window.scrollTo(0,0);
 }
+
 function navigate(id,button){
   showPage(id);
   document.querySelectorAll('.drawer nav button').forEach(b=>b.classList.remove('selected'));
   if(button)button.classList.add('selected');
   closeMenu();
 }
+
 function demoAction(name){
   const toast=document.getElementById('toast');
   toast.textContent=name+' : cette fonction sera connectée dans une prochaine version.';
@@ -443,64 +587,292 @@ function demoAction(name){
   clearTimeout(window.toastTimer);
   window.toastTimer=setTimeout(()=>toast.style.display='none',2800);
 }
+
 function selectCategory(name){
   demoAction('Catégorie '+name);
 }
+
 function videoTab(button,name){
   document.querySelectorAll('.video-tabs button').forEach(b=>b.classList.remove('active'));
   button.classList.add('active');
-  const labels={rides:'BOAR RIDES',terrains:'TERRAIN PRESENTATIONS',following:'ABONNEMENTS'};
+  const labels={
+    rides:'BOAR RIDES',
+    terrains:'TERRAIN PRESENTATIONS',
+    following:'ABONNEMENTS'
+  };
   document.getElementById('videoCategory').textContent=labels[name];
 }
+
 function shopCategory(category){
   document.querySelectorAll('.shop-item').forEach(item=>{
     item.style.display=(category==='TOUT'||item.dataset.category===category)?'block':'none';
   });
 }
+
+/* LISTE DES BIKE PARKS
+   Les coordonnées servent à placer les marqueurs
+   sur la carte. Elles sont indicatives.
+*/
+const bikeParks=[
+  {
+    name:'Ferme Libert',
+    country:'Belgique',
+    region:'Malmedy',
+    lat:50.414,
+    lng:6.034
+  },
+  {
+    name:'Les Gets Bike Park',
+    country:'France',
+    region:'Les Gets',
+    lat:46.158,
+    lng:6.670
+  },
+  {
+    name:'Morzine Bike Park',
+    country:'France',
+    region:'Morzine',
+    lat:46.180,
+    lng:6.704
+  },
+  {
+    name:'Avoriaz Bike Park',
+    country:'France',
+    region:'Avoriaz',
+    lat:46.191,
+    lng:6.775
+  },
+  {
+    name:'Châtel Bike Park',
+    country:'France',
+    region:'Châtel',
+    lat:46.267,
+    lng:6.840
+  },
+  {
+    name:'Tignes Bike Park',
+    country:'France',
+    region:'Tignes',
+    lat:45.469,
+    lng:6.909
+  },
+  {
+    name:'Les 2 Alpes',
+    country:'France',
+    region:'Les Deux Alpes',
+    lat:45.014,
+    lng:6.122
+  },
+  {
+    name:'Bikepark Leogang',
+    country:'Autriche',
+    region:'Leogang',
+    lat:47.439,
+    lng:12.760
+  },
+  {
+    name:'Planai Bikepark',
+    country:'Autriche',
+    region:'Schladming',
+    lat:47.392,
+    lng:13.687
+  },
+  {
+    name:'Saalbach Hinterglemm',
+    country:'Autriche',
+    region:'Saalbach',
+    lat:47.391,
+    lng:12.636
+  },
+  {
+    name:'Serfaus-Fiss-Ladis',
+    country:'Autriche',
+    region:'Tyrol',
+    lat:47.056,
+    lng:10.609
+  },
+  {
+    name:'Bikepark Winterberg',
+    country:'Allemagne',
+    region:'Winterberg',
+    lat:51.190,
+    lng:8.531
+  },
+  {
+    name:'Bikepark Geisskopf',
+    country:'Allemagne',
+    region:'Bischofsmais',
+    lat:48.971,
+    lng:13.017
+  },
+  {
+    name:'Verbier Bikepark',
+    country:'Suisse',
+    region:'Verbier',
+    lat:46.096,
+    lng:7.228
+  },
+  {
+    name:'Lenzerheide Bikepark',
+    country:'Suisse',
+    region:'Lenzerheide',
+    lat:46.727,
+    lng:9.557
+  },
+  {
+    name:'Finale Outdoor Region',
+    country:'Italie',
+    region:'Finale Ligure',
+    lat:44.170,
+    lng:8.344
+  },
+  {
+    name:'Mottolino Bikepark',
+    country:'Italie',
+    region:'Livigno',
+    lat:46.538,
+    lng:10.135
+  },
+  {
+    name:'Val di Sole Bikepark',
+    country:'Italie',
+    region:'Commezzadura',
+    lat:46.318,
+    lng:10.750
+  },
+  {
+    name:'La Thuile Bikepark',
+    country:'Italie',
+    region:'La Thuile',
+    lat:45.713,
+    lng:6.950
+  },
+  {
+    name:'Pal Arinsal Bike Park',
+    country:'Andorre',
+    region:'La Massana',
+    lat:42.548,
+    lng:1.481
+  }
+];
+
+/* CRÉATION DE LA CARTE */
 function initMap(){
   if(map)return;
   if(!window.L)return;
-  map=L.map('map',{zoomControl:true}).setView([50.4669,4.8675],8);
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{
-    attribution:'Tiles © Esri'
-  }).addTo(map);
 
-  const spots=[
-    {name:'Spot forestier (démo)',lat:50.4669,lng:4.8675,type:'public'},
-    {name:'Terrain privé (démo)',lat:50.42,lng:4.95,type:'private'},
-    {name:'Spot enduro (démo)',lat:50.52,lng:4.78,type:'public'},
-    {name:'Trace de démonstration',lat:50.49,lng:4.91,type:'track'}
-  ];
-  spots.forEach(spot=>{
-    const marker=L.marker([spot.lat,spot.lng]).addTo(map);
-    marker.bindPopup('<b>'+spot.name+'</b><br><small>Emplacement fictif de démonstration</small>');
-    marker.options.spotType=spot.type;
-    markers.push(marker);
+  map=L.map('map',{
+    zoomControl:true,
+    scrollWheelZoom:true
+  }).setView([47.3,9.2],5);
+
+  /* IMAGERIE SATELLITE */
+  const satellite=L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    {
+      attribution:'Tiles © Esri',
+      maxZoom:19
+    }
+  );
+
+  satellite.addTo(map);
+
+  /* COUCHE DES FRONTIÈRES ET DES NOMS DE PAYS */
+  const boundaries=L.tileLayer(
+    'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+    {
+      attribution:'Boundaries and labels © Esri',
+      maxZoom:19,
+      opacity:1
+    }
+  );
+
+  boundaries.addTo(map);
+
+  /* MARQUEURS DES BIKE PARKS */
+  bikeParks.forEach(park=>{
+    const icon=L.divIcon({
+      className:'',
+      html:'<div class="park-marker">B</div>',
+      iconSize:[29,29],
+      iconAnchor:[14,14],
+      popupAnchor:[0,-13]
+    });
+
+    const marker=L.marker([park.lat,park.lng],{icon:icon});
+
+    marker.bindPopup(
+      '<div>'+
+      '<strong>'+park.name+'</strong>'+
+      '<div class="popup-country">'+park.region+' · '+park.country+'</div>'+
+      '<div class="popup-tag">BIKE PARK</div>'+
+      '</div>'
+    );
+
+    marker.parkCountry=park.country;
+    marker.addTo(map);
+    parkMarkers.push(marker);
   });
 }
-function setFilter(button,filter){
-  currentFilter=filter;
-  document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+
+/* FILTRES PAR PAYS */
+function filterParks(country,button){
+  currentParkFilter=country;
+
+  document.querySelectorAll('.map-filters button').forEach(b=>{
+    b.classList.remove('active');
+  });
   button.classList.add('active');
-  markers.forEach(marker=>{
-    const visible=filter==='all'||marker.options.spotType===filter;
-    if(visible&&!map.hasLayer(marker))marker.addTo(map);
-    if(!visible&&map.hasLayer(marker))map.removeLayer(marker);
+
+  if(!map)return;
+
+  parkMarkers.forEach(marker=>{
+    const visible=country==='all'||marker.parkCountry===country;
+
+    if(visible&&!map.hasLayer(marker)){
+      marker.addTo(map);
+    }
+    if(!visible&&map.hasLayer(marker)){
+      map.removeLayer(marker);
+    }
   });
+
+  /* RECADRAGE SUR LE PAYS FILTRÉ */
+  if(country!=='all'){
+    const matching=parkMarkers.filter(m=>m.parkCountry===country);
+
+    if(matching.length){
+      const group=L.featureGroup(matching);
+      map.fitBounds(group.getBounds().pad(0.35),{
+        maxZoom:8,
+        animate:true
+      });
+    }
+  }else{
+    map.setView([47.3,9.2],5,{animate:true});
+  }
 }
 
-/* Ouvrir le menu avec un glissement depuis la gauche */
-let touchStartX=0,touchStartY=0;
+/* MENU COULISSANT AU DOIGT */
+let touchStartX=0;
+let touchStartY=0;
+
 document.addEventListener('touchstart',e=>{
   touchStartX=e.touches[0].clientX;
   touchStartY=e.touches[0].clientY;
 },{passive:true});
+
 document.addEventListener('touchend',e=>{
   const dx=e.changedTouches[0].clientX-touchStartX;
   const dy=e.changedTouches[0].clientY-touchStartY;
+
   if(Math.abs(dy)>Math.abs(dx))return;
+
   if(touchStartX<35&&dx>90)openMenu();
-  if(drawer.classList.contains('open')&&dx< -90)closeMenu();
+
+  if(drawer.classList.contains('open')&&dx< -90){
+    closeMenu();
+  }
 },{passive:true});
 </script>
 </body>
