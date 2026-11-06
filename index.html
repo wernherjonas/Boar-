@@ -11,80 +11,74 @@
 
 <style>
 :root{
-  --bg:#080808;
-  --panel:#111;
-  --white:#f5f5f5;
-  --grey:#999;
-  --line:#292929;
+  --bg:#080808;--panel:#111;--white:#f5f5f5;
+  --grey:#999;--line:#292929;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  background:var(--bg);
-  color:var(--white);
-  font-family:Arial,Helvetica,sans-serif;
-  overflow-x:hidden;
-}
+body{background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
 button{font:inherit;color:inherit;cursor:pointer}
 img{display:block;width:100%;object-fit:cover}
-#app{min-height:100vh;padding-bottom:35px}
+
+/* CONNEXION */
+#authScreen{
+  min-height:100vh;display:flex;align-items:center;
+  justify-content:center;padding:25px;background:#080808;
+}
+.auth-box{width:100%;max-width:390px}
+.auth-logo{text-align:center;font-size:42px;font-weight:900;letter-spacing:9px;margin-bottom:7px}
+.auth-sub{text-align:center;color:#999;font-size:9px;letter-spacing:4px;margin-bottom:45px}
+.auth-box h1{font-size:27px;margin-bottom:9px}
+.auth-description{color:#999;font-size:12px;line-height:1.5;margin-bottom:28px}
+.auth-box label{display:block;font-size:10px;letter-spacing:1px;margin:17px 0 8px;color:#ccc}
+.auth-box input{
+  width:100%;padding:15px;background:#111;border:1px solid #333;
+  color:white;font-size:14px;outline:none;border-radius:0;
+}
+.auth-box input:focus{border-color:white}
+.auth-submit{
+  width:100%;padding:16px;background:white;color:#080808;
+  border:0;font-size:11px;font-weight:bold;letter-spacing:2px;margin-top:24px;
+}
+.auth-switch{
+  display:block;width:100%;background:none;border:0;
+  color:#ddd;font-size:11px;margin-top:22px;text-decoration:underline;
+}
+.auth-forgot{
+  display:block;margin:15px 0 0 auto;background:none;border:0;
+  color:#999;font-size:10px;text-decoration:underline;
+}
+.auth-message{font-size:12px;line-height:1.5;margin-top:18px;color:#ddd}
+.auth-message.error{color:#ff7777}
+.auth-message.success{color:#b5e6b5}
+.auth-small{text-align:center;color:#666;font-size:10px;margin-top:35px}
+
+/* APPLICATION */
+#app{min-height:100vh;padding-bottom:35px;display:none}
 .topbar{
-  height:65px;padding:0 20px;
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:20;
-  background:rgba(8,8,8,.94);
-  backdrop-filter:blur(12px);
+  height:65px;padding:0 20px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:20;
+  background:rgba(8,8,8,.94);backdrop-filter:blur(12px);
   border-bottom:1px solid var(--line);
 }
 .brand{font-size:24px;font-weight:900;letter-spacing:5px}
-.brand small{
-  display:block;font-size:8px;letter-spacing:3px;
-  color:#aaa;margin-top:3px
-}
-.menu-button{
-  border:0;background:none;font-size:26px;
-  width:42px;height:42px;text-align:left
-}
-.page{
-  display:none;
-  animation:appear .3s ease;
-  position:relative;
-  z-index:1;
-  isolation:isolate;
-  overflow:hidden;
-}
+.brand small{display:block;font-size:8px;letter-spacing:3px;color:#aaa;margin-top:3px}
+.menu-button{border:0;background:none;font-size:26px;width:42px;height:42px;text-align:left}
+.page{display:none;animation:appear .3s ease;position:relative;z-index:1;isolation:isolate;overflow:hidden}
 .page.active{display:block}
-@keyframes appear{
-  from{opacity:0;transform:translateY(8px)}
-  to{opacity:1;transform:translateY(0)}
-}
+@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .section{padding:25px 18px}
-.eyebrow{
-  font-size:10px;letter-spacing:3px;
-  color:#aaa;margin-bottom:10px
-}
+.eyebrow{font-size:10px;letter-spacing:3px;color:#aaa;margin-bottom:10px}
 h1{font-size:35px;line-height:1.05;font-weight:900;letter-spacing:-1px}
 h2{font-size:21px;letter-spacing:1px;margin-bottom:17px}
 h3{font-size:16px}
 p{color:#aaa;line-height:1.5;font-size:13px}
-.white-button{
-  display:inline-block;border:1px solid white;
-  background:white;color:#080808;
-  padding:13px 18px;font-weight:bold;
-  font-size:10px;letter-spacing:1.5px
-}
-.outline-button{
-  display:inline-block;border:1px solid #555;
-  background:transparent;color:white;
-  padding:12px 16px;font-size:10px;letter-spacing:1px
-}
+.white-button{display:inline-block;border:1px solid white;background:white;color:#080808;padding:13px 18px;font-weight:bold;font-size:10px;letter-spacing:1.5px}
+.outline-button{display:inline-block;border:1px solid #555;background:transparent;color:white;padding:12px 16px;font-size:10px;letter-spacing:1px}
 
 /* ACCUEIL */
 .hero{
-  min-height:490px;
-  position:relative;display:flex;align-items:flex-end;
-  padding:30px 22px;
-  background:
-  linear-gradient(0deg,rgba(0,0,0,.92),transparent 75%),
+  min-height:490px;position:relative;display:flex;align-items:flex-end;padding:30px 22px;
+  background:linear-gradient(0deg,rgba(0,0,0,.92),transparent 75%),
   url("https://images.unsplash.com/photo-1544191696-15693072b5a2?auto=format&fit=crop&w=1400&q=85") center/cover;
 }
 .hero-content{max-width:440px}
@@ -92,253 +86,93 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 .hero p{color:#ddd;margin:14px 0 20px;max-width:300px}
 .hero-tag{font-size:10px;letter-spacing:4px;margin-bottom:12px}
 .category-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.category-card{
-  height:205px;position:relative;overflow:hidden;
-  background:#181818;text-align:left;border:0
-}
+.category-card{height:205px;position:relative;overflow:hidden;background:#181818;text-align:left;border:0}
 .category-card:first-child{grid-column:span 2;height:235px}
 .category-card img{height:100%;transition:transform .5s;filter:brightness(.72)}
-.category-card .category-label{
-  position:absolute;left:14px;bottom:14px;
-  font-size:23px;font-weight:900;
-  letter-spacing:1px;text-shadow:0 2px 10px #000
-}
-.category-card small{
-  display:block;font-size:9px;letter-spacing:2px;
-  font-weight:normal;margin-bottom:5px
-}
-.section-heading{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:17px
-}
+.category-card .category-label{position:absolute;left:14px;bottom:14px;font-size:23px;font-weight:900;letter-spacing:1px;text-shadow:0 2px 10px #000}
+.category-card small{display:block;font-size:9px;letter-spacing:2px;font-weight:normal;margin-bottom:5px}
+.section-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:17px}
 .section-heading span{font-size:9px;color:#999;letter-spacing:2px}
 .news-list{display:grid;gap:12px}
-.news-card{
-  display:grid;grid-template-columns:115px 1fr;
-  min-height:105px;background:#111;
-  border:1px solid #222;text-decoration:none;color:white;
-  overflow:hidden
-}
+.news-card{display:grid;grid-template-columns:115px 1fr;min-height:105px;background:#111;border:1px solid #222;text-decoration:none;color:white;overflow:hidden}
 .news-card img{height:100%;min-height:105px}
 .news-card div{padding:12px}
 .news-card small{font-size:9px;color:#aaa;letter-spacing:1px}
 .news-card h3{font-size:13px;line-height:1.35;margin:7px 0}
 .news-card p{font-size:11px}
 .community-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.community-card{
-  background:#111;border:1px solid #222;
-  padding:17px;min-height:125px
-}
+.community-card{background:#111;border:1px solid #222;padding:17px;min-height:125px}
 .community-card strong{display:block;font-size:14px;margin-bottom:9px}
 .community-card p{font-size:11px}
 
 /* MENU */
-.overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.65);
-  z-index:1000;opacity:0;pointer-events:none;transition:.3s
-}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;opacity:0;pointer-events:none;transition:.3s}
 .overlay.open{opacity:1;pointer-events:auto}
-.drawer{
-  position:fixed;z-index:1001;left:0;top:0;bottom:0;
-  width:76%;max-width:340px;background:#101010;
-  border-right:1px solid #333;padding:28px 22px;
-  transform:translateX(-105%);transition:transform .35s ease;
-  isolation:isolate;
-}
+.drawer{position:fixed;z-index:1001;left:0;top:0;bottom:0;width:76%;max-width:340px;background:#101010;border-right:1px solid #333;padding:28px 22px;transform:translateX(-105%);transition:transform .35s ease;isolation:isolate}
 .drawer.open{transform:translateX(0)}
 .drawer-head{margin:20px 0 45px}
 .drawer-head strong{font-size:30px;letter-spacing:6px}
 .drawer-head p{font-size:9px;letter-spacing:3px;margin-top:6px}
 .drawer nav{display:grid}
-.drawer nav button{
-  background:none;border:0;border-bottom:1px solid #242424;
-  text-align:left;padding:17px 0;font-size:13px;letter-spacing:1px
-}
+.drawer nav button{background:none;border:0;border-bottom:1px solid #242424;text-align:left;padding:17px 0;font-size:13px;letter-spacing:1px}
 .drawer nav button.selected{color:white;font-weight:bold}
-.drawer-footer{
-  position:absolute;bottom:28px;
-  font-size:9px;color:#777;letter-spacing:2px
-}
+.drawer-footer{position:absolute;bottom:28px;font-size:9px;color:#777;letter-spacing:2px}
 
 /* CARTE */
-#mapPage{
-  position:relative;
-  z-index:1;
-  isolation:isolate;
-  overflow:hidden;
-}
+#mapPage{position:relative;z-index:1;isolation:isolate;overflow:hidden}
 .map-page-title{padding:20px 18px 14px}
 .map-page-title h1{font-size:30px}
-.map-tools{
-  padding:13px 15px;background:#090909;
-  border-bottom:1px solid #252525;
-  position:relative;
-  z-index:3;
-}
-.map-actions{
-  display:flex;gap:17px;overflow-x:auto;
-  padding-bottom:13px
-}
-.map-actions button{
-  background:none;border:0;white-space:nowrap;
-  font-size:10px;letter-spacing:1px;color:#ddd
-}
-.map-filters{
-  display:flex;gap:17px;overflow-x:auto;
-  padding-bottom:3px
-}
-.map-filters button{
-  background:none;border:0;white-space:nowrap;
-  color:#888;font-size:10px;padding:5px 0;
-  border-bottom:1px solid transparent
-}
-.map-filters button.active{
-  color:white;border-bottom:1px solid white
-}
-#map{
-  height:calc(100vh - 230px);
-  min-height:430px;
-  background:#222;
-  position:relative;
-  z-index:0;
-  isolation:isolate;
-  overflow:hidden;
-}
-.leaflet-container{
-  background:#222;
-  z-index:0 !important;
-}
-.leaflet-pane,
-.leaflet-top,
-.leaflet-bottom,
-.leaflet-control{
-  z-index:1 !important;
-}
-.map-note{
-  font-size:10px;padding:10px 14px;
-  color:#999;background:#101010;
-  position:relative;z-index:2;
-}
-.map-legend{
-  display:flex;gap:15px;flex-wrap:wrap;
-  padding:10px 14px;background:#101010;
-  border-top:1px solid #242424;
-  position:relative;z-index:2;
-}
-.legend-item{
-  display:flex;align-items:center;gap:6px;
-  color:#aaa;font-size:10px
-}
-.legend-dot{
-  width:9px;height:9px;border-radius:50%;
-  background:white;display:inline-block
-}
+.map-tools{padding:13px 15px;background:#090909;border-bottom:1px solid #252525;position:relative;z-index:3}
+.map-actions{display:flex;gap:17px;overflow-x:auto;padding-bottom:13px}
+.map-actions button{background:none;border:0;white-space:nowrap;font-size:10px;letter-spacing:1px;color:#ddd}
+.map-filters{display:flex;gap:17px;overflow-x:auto;padding-bottom:3px}
+.map-filters button{background:none;border:0;white-space:nowrap;color:#888;font-size:10px;padding:5px 0;border-bottom:1px solid transparent}
+.map-filters button.active{color:white;border-bottom:1px solid white}
+#map{height:calc(100vh - 230px);min-height:430px;background:#222;position:relative;z-index:0;isolation:isolate;overflow:hidden}
+.leaflet-container{background:#222;z-index:0!important}
+.leaflet-pane,.leaflet-top,.leaflet-bottom,.leaflet-control{z-index:1!important}
+.map-note{font-size:10px;padding:10px 14px;color:#999;background:#101010;position:relative;z-index:2}
+.map-legend{display:flex;gap:15px;flex-wrap:wrap;padding:10px 14px;background:#101010;border-top:1px solid #242424;position:relative;z-index:2}
+.legend-item{display:flex;align-items:center;gap:6px;color:#aaa;font-size:10px}
+.legend-dot{width:9px;height:9px;border-radius:50%;background:white;display:inline-block}
 .legend-dot.park{background:#fff}
-.legend-dot.border{
-  width:14px;height:2px;border-radius:0;background:#ddd
-}
-.park-marker{
-  width:29px;height:29px;border-radius:50%;
-  background:#080808;border:2px solid white;
-  color:white;display:flex;align-items:center;
-  justify-content:center;font-size:11px;font-weight:bold;
-  box-shadow:0 2px 9px rgba(0,0,0,.8)
-}
-.leaflet-popup-content-wrapper{
-  background:#111;color:#fff;border:1px solid #444;
-  border-radius:3px
-}
+.legend-dot.border{width:14px;height:2px;border-radius:0;background:#ddd}
+.park-marker{width:29px;height:29px;border-radius:50%;background:#080808;border:2px solid white;color:white;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;box-shadow:0 2px 9px rgba(0,0,0,.8)}
+.leaflet-popup-content-wrapper{background:#111;color:#fff;border:1px solid #444;border-radius:3px}
 .leaflet-popup-tip{background:#111}
 .leaflet-popup-content{margin:13px;min-width:155px}
-.popup-country{
-  color:#aaa;font-size:10px;
-  text-transform:uppercase;letter-spacing:1px;
-  margin-top:5px
-}
-.popup-tag{
-  display:inline-block;margin-top:9px;
-  padding:5px 7px;border:1px solid #555;
-  font-size:9px;letter-spacing:1px
-}
+.popup-country{color:#aaa;font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-top:5px}
+.popup-tag{display:inline-block;margin-top:9px;padding:5px 7px;border:1px solid #555;font-size:9px;letter-spacing:1px}
 
 /* AUTRES PAGES */
 .page-title{padding:27px 20px 18px}
 .page-title h1{font-size:30px}
-.empty-state{
-  margin:15px 18px;padding:30px 20px;
-  border:1px solid #292929;background:#101010
-}
+.empty-state{margin:15px 18px;padding:30px 20px;border:1px solid #292929;background:#101010}
 .empty-state h3{margin-bottom:9px}
-.video-tabs{
-  display:flex;gap:22px;padding:15px 20px;
-  border-bottom:1px solid #222
-}
-.video-tabs button{
-  background:none;border:0;color:#888;font-size:11px
-}
+.video-tabs{display:flex;gap:22px;padding:15px 20px;border-bottom:1px solid #222}
+.video-tabs button{background:none;border:0;color:#888;font-size:11px}
 .video-tabs button.active{color:white}
-.video-placeholder{
-  height:65vh;min-height:420px;margin:15px;
-  background:
-  linear-gradient(0deg,#080808,transparent),
-  url("https://images.unsplash.com/photo-1544191696-15693072b5a2?auto=format&fit=crop&w=1000&q=80") center/cover;
-  display:flex;align-items:flex-end;padding:20px
-}
-.plus-button{
-  position:fixed;bottom:27px;left:50%;
-  transform:translateX(-50%);
-  width:55px;height:55px;border-radius:50%;
-  border:1px solid white;background:rgba(0,0,0,.65);
-  font-size:30px;z-index:15
-}
-.shop-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:10px;padding:0 15px
-}
+.video-placeholder{height:65vh;min-height:420px;margin:15px;background:linear-gradient(0deg,#080808,transparent),url("https://images.unsplash.com/photo-1544191696-15693072b5a2?auto=format&fit=crop&w=1000&q=80") center/cover;display:flex;align-items:flex-end;padding:20px}
+.plus-button{position:fixed;bottom:27px;left:50%;transform:translateX(-50%);width:55px;height:55px;border-radius:50%;border:1px solid white;background:rgba(0,0,0,.65);font-size:30px;z-index:15}
+.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 15px}
 .shop-item{background:#111;border:1px solid #242424;padding-bottom:12px}
 .shop-item img{height:150px}
 .shop-item strong{display:block;font-size:12px;padding:10px 10px 4px}
 .shop-item small{padding:0 10px;color:#999}
-.shop-categories{
-  display:flex;gap:17px;overflow:auto;padding:0 18px 20px
-}
-.shop-categories button{
-  background:none;border:0;color:#aaa;
-  white-space:nowrap;font-size:10px
-}
-.profile-cover{
-  height:190px;
-  background:
-  linear-gradient(0deg,#080808,transparent),
-  url("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80") center/cover
-}
+.shop-categories{display:flex;gap:17px;overflow:auto;padding:0 18px 20px}
+.shop-categories button{background:none;border:0;color:#aaa;white-space:nowrap;font-size:10px}
+.profile-cover{height:190px;background:linear-gradient(0deg,#080808,transparent),url("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80") center/cover}
 .profile-info{padding:0 20px 25px}
-.avatar{
-  width:75px;height:75px;border-radius:50%;
-  background:#222;border:3px solid #080808;
-  margin-top:-38px;display:grid;place-items:center;
-  font-size:25px;font-weight:bold
-}
+.avatar{width:75px;height:75px;border-radius:50%;background:#222;border:3px solid #080808;margin-top:-38px;display:grid;place-items:center;font-size:25px;font-weight:bold}
 .profile-info h2{margin:12px 0 5px}
 .settings-list{padding:0 20px}
-.settings-list button{
-  width:100%;text-align:left;background:none;color:white;
-  border:0;border-bottom:1px solid #292929;
-  padding:18px 0;font-size:13px
-}
-.toast{
-  position:fixed;bottom:25px;left:50%;
-  transform:translateX(-50%);
-  background:#eee;color:#111;padding:12px 17px;
-  font-size:12px;z-index:1100;display:none;
-  max-width:90%;text-align:center
-}
+.settings-list button{width:100%;text-align:left;background:none;color:white;border:0;border-bottom:1px solid #292929;padding:18px 0;font-size:13px}
+.logout-button{width:100%;margin-top:25px;padding:15px;background:transparent;border:1px solid #555;color:white;font-size:11px;letter-spacing:2px}
+.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#eee;color:#111;padding:12px 17px;font-size:12px;z-index:1100;display:none;max-width:90%;text-align:center}
+
 @media(min-width:700px){
   .section{max-width:950px;margin:auto;padding:35px 25px}
-  .hero{
-    min-height:570px;
-    padding-left:max(35px,calc((100vw - 950px)/2))
-  }
+  .hero{min-height:570px;padding-left:max(35px,calc((100vw - 950px)/2))}
   .category-grid{grid-template-columns:repeat(3,1fr)}
   .category-card:first-child{grid-column:span 1;height:240px}
   .category-card{height:240px}
@@ -349,6 +183,35 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 </head>
 
 <body>
+
+<!-- ÉCRAN DE CONNEXION -->
+<section id="authScreen">
+  <div class="auth-box">
+    <div class="auth-logo">BOAR</div>
+    <div class="auth-sub">RIDE YOUR LINE.</div>
+
+    <h1 id="authTitle">BIENVENUE.</h1>
+    <p class="auth-description" id="authDescription">Connecte-toi pour rejoindre la communauté BOAR.</p>
+
+    <form id="authForm">
+      <label for="authEmail">ADRESSE E-MAIL</label>
+      <input id="authEmail" type="email" placeholder="ton@email.com" autocomplete="email" required>
+
+      <label for="authPassword">MOT DE PASSE</label>
+      <input id="authPassword" type="password" placeholder="Ton mot de passe" autocomplete="current-password" minlength="8" required>
+
+      <button class="auth-submit" id="authSubmit" type="submit">SE CONNECTER</button>
+    </form>
+
+    <button class="auth-forgot" id="forgotButton" type="button">Mot de passe oublié ?</button>
+    <button class="auth-switch" id="authSwitch" type="button">Pas encore de compte ? Créer un compte</button>
+
+    <div class="auth-message" id="authMessage"></div>
+    <div class="auth-small">BOAR © 2026 · RIDE YOUR LINE.</div>
+  </div>
+</section>
+
+<!-- APPLICATION -->
 <div id="app">
 
 <header class="topbar">
@@ -370,13 +233,9 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 
   <section class="section">
     <div class="section-heading">
-      <div>
-        <div class="eyebrow">TROUVE TON STYLE</div>
-        <h2>CHOOSE YOUR RIDE.</h2>
-      </div>
+      <div><div class="eyebrow">TROUVE TON STYLE</div><h2>CHOOSE YOUR RIDE.</h2></div>
       <span>01 / 03</span>
     </div>
-
     <div class="category-grid">
       <button class="category-card" onclick="selectCategory('DOWNHILL')">
         <img src="https://images.unsplash.com/photo-1544191696-15693072b5a2?auto=format&fit=crop&w=1100&q=85" alt="VTT de descente">
@@ -395,10 +254,7 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 
   <section class="section">
     <div class="section-heading">
-      <div>
-        <div class="eyebrow">LE MONDE DU VTT</div>
-        <h2>ACTUALITÉS VÉLO.</h2>
-      </div>
+      <div><div class="eyebrow">LE MONDE DU VTT</div><h2>ACTUALITÉS VÉLO.</h2></div>
       <span>NEWS</span>
     </div>
     <div class="news-list">
@@ -434,18 +290,13 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 
 <!-- CARTE -->
 <main id="mapPage" class="page">
-  <div class="map-page-title">
-    <div class="eyebrow">EXPLORE EUROPE</div>
-    <h1>CARTE.</h1>
-  </div>
-
+  <div class="map-page-title"><div class="eyebrow">EXPLORE EUROPE</div><h1>CARTE.</h1></div>
   <div class="map-tools">
     <div class="map-actions">
       <button onclick="demoAction('Ajouter un terrain')">+ AJOUTER UN TERRAIN</button>
       <button onclick="demoAction('Ajouter une piste')">+ AJOUTER UNE PISTE</button>
       <button onclick="demoAction('Créer une trace')">+ CRÉER UNE TRACE</button>
     </div>
-
     <div class="map-filters">
       <button class="active" onclick="filterParks('all',this)">TOUS</button>
       <button onclick="filterParks('Belgique',this)">BELGIQUE</button>
@@ -457,17 +308,12 @@ p{color:#aaa;line-height:1.5;font-size:13px}
       <button onclick="filterParks('Andorre',this)">ANDORRE</button>
     </div>
   </div>
-
   <div id="map"></div>
-
   <div class="map-legend">
     <span class="legend-item"><i class="legend-dot park"></i> Bike park</span>
     <span class="legend-item"><i class="legend-dot border"></i> Frontières des pays</span>
   </div>
-
-  <div class="map-note">
-    Les marqueurs indiquent les domaines VTT. Les positions sont indicatives et ne représentent pas les entrées exactes des pistes.
-  </div>
+  <div class="map-note">Les marqueurs indiquent les domaines VTT. Les positions sont indicatives et ne représentent pas les entrées exactes des pistes.</div>
 </main>
 
 <!-- GROUPES -->
@@ -481,7 +327,7 @@ p{color:#aaa;line-height:1.5;font-size:13px}
   </div>
 </main>
 
-<!-- VIDEOS -->
+<!-- VIDÉOS -->
 <main id="videos" class="page">
   <div class="page-title"><div class="eyebrow">WATCH THE RIDE</div><h1>VIDÉOS.</h1></div>
   <div class="video-tabs">
@@ -490,11 +336,7 @@ p{color:#aaa;line-height:1.5;font-size:13px}
     <button onclick="videoTab(this,'following')">ABONNEMENTS</button>
   </div>
   <div class="video-placeholder">
-    <div>
-      <div class="eyebrow" id="videoCategory">BOAR RIDES</div>
-      <h2>YOUR NEXT RIDE.</h2>
-      <p>Les vidéos de la communauté apparaîtront ici.</p>
-    </div>
+    <div><div class="eyebrow" id="videoCategory">BOAR RIDES</div><h2>YOUR NEXT RIDE.</h2><p>Les vidéos de la communauté apparaîtront ici.</p></div>
   </div>
   <button class="plus-button" onclick="demoAction('Publier une vidéo')">+</button>
 </main>
@@ -525,14 +367,15 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 <main id="profile" class="page">
   <div class="profile-cover"></div>
   <div class="profile-info">
-    <div class="avatar">B</div>
-    <h2>TON PROFIL</h2>
-    <p>@boar_rider · Nouveau rider</p>
+    <div class="avatar" id="profileAvatar">B</div>
+    <h2 id="profileName">TON PROFIL</h2>
+    <p id="profileEmail">Chargement du compte...</p>
     <div class="community-grid" style="margin-top:22px">
       <div class="community-card"><strong>0</strong><p>Vidéos</p></div>
       <div class="community-card"><strong>0</strong><p>Abonnés</p></div>
     </div>
     <button class="outline-button" style="margin-top:20px" onclick="demoAction('Modifier le profil')">MODIFIER LE PROFIL</button>
+    <button class="logout-button" onclick="logout()">SE DÉCONNECTER</button>
   </div>
 </main>
 
@@ -540,12 +383,13 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 <main id="settings" class="page">
   <div class="page-title"><div class="eyebrow">PERSONALISE BOAR</div><h1>PARAMÈTRES.</h1></div>
   <div class="settings-list">
-    <button onclick="demoAction('Compte')">MON COMPTE　 →</button>
+    <button onclick="showPage('profile')">MON COMPTE　 →</button>
     <button onclick="demoAction('Confidentialité')">CONFIDENTIALITÉ　 →</button>
     <button onclick="demoAction('Notifications')">NOTIFICATIONS　 →</button>
     <button onclick="demoAction('Localisation')">LOCALISATION　 →</button>
     <button onclick="demoAction('Aide')">AIDE ET SUPPORT　 →</button>
     <button onclick="demoAction('À propos de BOAR')">À PROPOS DE BOAR　 →</button>
+    <button onclick="logout()">SE DÉCONNECTER　 →</button>
   </div>
 </main>
 
@@ -554,10 +398,7 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 <!-- MENU -->
 <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 <aside class="drawer" id="drawer">
-  <div class="drawer-head">
-    <strong>BOAR</strong>
-    <p>RIDE YOUR LINE.</p>
-  </div>
+  <div class="drawer-head"><strong>BOAR</strong><p>RIDE YOUR LINE.</p></div>
   <nav>
     <button class="selected" onclick="navigate('home',this)">ACCUEIL</button>
     <button onclick="navigate('mapPage',this)">CARTE</button>
@@ -573,8 +414,202 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 <div class="toast" id="toast"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+/* ==========================================
+   CONNEXION SUPABASE
+========================================== */
+
+// URL de ton projet Supabase
+const SUPABASE_URL = 'https://xvzooqfqteuayhwwfjet.supabase.co';
+
+// Clé publique du projet
+const SUPABASE_KEY = 'sb_publishable_RkqJ_HnxUz4cE1Bs-reLwQ_mwkVd35';
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let authMode = 'login';
+let currentUser = null;
+
+const authScreen = document.getElementById('authScreen');
+const authForm = document.getElementById('authForm');
+const authTitle = document.getElementById('authTitle');
+const authDescription = document.getElementById('authDescription');
+const authSubmit = document.getElementById('authSubmit');
+const authSwitch = document.getElementById('authSwitch');
+const authMessage = document.getElementById('authMessage');
+const forgotButton = document.getElementById('forgotButton');
+
+function showAuthMessage(message,type=''){
+  authMessage.textContent = message;
+  authMessage.className = 'auth-message '+type;
+}
+
+function changeAuthMode(mode){
+  authMode = mode;
+  authMessage.textContent = '';
+
+  if(mode === 'signup'){
+    authTitle.textContent = 'CRÉER UN COMPTE.';
+    authDescription.textContent = 'Rejoins BOAR et retrouve les autres riders.';
+    authSubmit.textContent = 'CRÉER MON COMPTE';
+    authSwitch.textContent = 'Déjà un compte ? Se connecter';
+    document.getElementById('authPassword').autocomplete = 'new-password';
+    forgotButton.style.display = 'none';
+  }else{
+    authTitle.textContent = 'BIENVENUE.';
+    authDescription.textContent = 'Connecte-toi pour rejoindre la communauté BOAR.';
+    authSubmit.textContent = 'SE CONNECTER';
+    authSwitch.textContent = 'Pas encore de compte ? Créer un compte';
+    document.getElementById('authPassword').autocomplete = 'current-password';
+    forgotButton.style.display = 'block';
+  }
+}
+
+authSwitch.addEventListener('click',()=>{
+  changeAuthMode(authMode === 'login' ? 'signup' : 'login');
+});
+
+authForm.addEventListener('submit',async(event)=>{
+  event.preventDefault();
+
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+
+  authSubmit.disabled = true;
+  authSubmit.textContent = 'PATIENTE...';
+  showAuthMessage('');
+
+  try{
+    if(authMode === 'signup'){
+      const {data,error} = await supabaseClient.auth.signUp({
+        email:email,
+        password:password,
+        options:{
+          emailRedirectTo:window.location.origin + window.location.pathname
+        }
+      });
+
+      if(error) throw error;
+
+      if(data.session){
+        showAuthMessage('Ton compte est créé ! Bienvenue sur BOAR.','success');
+      }else{
+        showAuthMessage('Ton inscription est presque terminée. Vérifie ta boîte e-mail et clique sur le lien de confirmation avant de te connecter.','success');
+      }
+
+    }else{
+      const {data,error} = await supabaseClient.auth.signInWithPassword({
+        email:email,
+        password:password
+      });
+
+      if(error) throw error;
+
+      if(data.user){
+        showAuthMessage('Connexion réussie !','success');
+        enterApp(data.user);
+      }
+    }
+
+  }catch(error){
+    showAuthMessage(error.message || 'Une erreur est survenue. Réessaie.','error');
+  }finally{
+    authSubmit.disabled = false;
+    authSubmit.textContent = authMode === 'signup' ? 'CRÉER MON COMPTE' : 'SE CONNECTER';
+  }
+});
+
+/* MOT DE PASSE OUBLIÉ */
+forgotButton.addEventListener('click',async()=>{
+  const email = document.getElementById('authEmail').value.trim();
+
+  if(!email){
+    showAuthMessage('Entre ton adresse e-mail dans le champ du dessus.','error');
+    return;
+  }
+
+  showAuthMessage('Envoi du lien de récupération...');
+
+  const {error} = await supabaseClient.auth.resetPasswordForEmail(email,{
+    redirectTo:window.location.origin + window.location.pathname
+  });
+
+  if(error){
+    showAuthMessage(error.message,'error');
+  }else{
+    showAuthMessage('Si cette adresse correspond à un compte, un e-mail de récupération va être envoyé.','success');
+  }
+});
+
+/* AFFICHER L'APPLICATION */
+function enterApp(user){
+  currentUser = user;
+  authScreen.style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+
+  const email = user.email || 'Rider BOAR';
+  document.getElementById('profileEmail').textContent = email;
+  document.getElementById('profileName').textContent = email.split('@')[0].toUpperCase();
+  document.getElementById('profileAvatar').textContent = email.charAt(0).toUpperCase();
+}
+
+/* DÉCONNEXION */
+async function logout(){
+  const {error} = await supabaseClient.auth.signOut();
+
+  if(error){
+    showToast(error.message);
+    return;
+  }
+
+  currentUser = null;
+  document.getElementById('app').style.display = 'none';
+  authScreen.style.display = 'flex';
+  document.getElementById('authForm').reset();
+  changeAuthMode('login');
+  showAuthMessage('Tu es déconnecté. À bientôt sur BOAR.','success');
+  closeMenu();
+}
+
+/* VÉRIFIER LA SESSION AU DÉMARRAGE */
+async function checkSession(){
+  const {data,error} = await supabaseClient.auth.getSession();
+
+  if(error){
+    showAuthMessage('Impossible de vérifier ta session. Recharge la page.','error');
+    return;
+  }
+
+  if(data.session && data.session.user){
+    enterApp(data.session.user);
+  }else{
+    authScreen.style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+  }
+}
+
+/* SURVEILLER LES CHANGEMENTS DE CONNEXION */
+supabaseClient.auth.onAuthStateChange((event,session)=>{
+  if(session && session.user){
+    enterApp(session.user);
+  }else if(event === 'SIGNED_OUT'){
+    currentUser = null;
+    authScreen.style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+  }
+});
+
+checkSession();
+
+/* ==========================================
+   FONCTIONS DU SITE BOAR
+========================================== */
+
 const drawer=document.getElementById('drawer');
 const overlay=document.getElementById('overlay');
 
@@ -602,6 +637,7 @@ function showPage(id){
       if(map)map.invalidateSize();
     },200);
   }
+
   window.scrollTo(0,0);
 }
 
@@ -612,12 +648,16 @@ function navigate(id,button){
   closeMenu();
 }
 
-function demoAction(name){
+function showToast(message){
   const toast=document.getElementById('toast');
-  toast.textContent=name+' : cette fonction sera connectée dans une prochaine version.';
+  toast.textContent=message;
   toast.style.display='block';
   clearTimeout(window.toastTimer);
   window.toastTimer=setTimeout(()=>toast.style.display='none',2800);
+}
+
+function demoAction(name){
+  showToast(name+' : cette fonction sera connectée dans une prochaine version.');
 }
 
 function selectCategory(name){
@@ -699,33 +739,30 @@ function initMap(){
     const marker=L.marker([park.lat,park.lng],{icon:icon});
 
     marker.bindPopup(
-      '<div>'+
-      '<strong>'+park.name+'</strong>'+
+      '<div><strong>'+park.name+'</strong>'+
       '<div class="popup-country">'+park.region+' · '+park.country+'</div>'+
-      '<div class="popup-tag">BIKE PARK</div>'+
-      '</div>'
+      '<div class="popup-tag">BIKE PARK</div></div>'
     );
 
     marker.parkCountry=park.country;
     marker.addTo(map);
     parkMarkers.push(marker);
   });
+
+  filterParks(currentParkFilter,document.querySelector('.map-filters button.active'));
 }
 
 /* FILTRES PAR PAYS */
 function filterParks(country,button){
   currentParkFilter=country;
 
-  document.querySelectorAll('.map-filters button').forEach(b=>{
-    b.classList.remove('active');
-  });
-  button.classList.add('active');
+  document.querySelectorAll('.map-filters button').forEach(b=>b.classList.remove('active'));
+  if(button)button.classList.add('active');
 
   if(!map)return;
 
   parkMarkers.forEach(marker=>{
     const visible=country==='all'||marker.parkCountry===country;
-
     if(visible&&!map.hasLayer(marker))marker.addTo(map);
     if(!visible&&map.hasLayer(marker))map.removeLayer(marker);
   });
@@ -734,10 +771,7 @@ function filterParks(country,button){
     const matching=parkMarkers.filter(m=>m.parkCountry===country);
     if(matching.length){
       const group=L.featureGroup(matching);
-      map.fitBounds(group.getBounds().pad(0.35),{
-        maxZoom:8,
-        animate:true
-      });
+      map.fitBounds(group.getBounds().pad(0.35),{maxZoom:8,animate:true});
     }
   }else{
     map.setView([47.3,9.2],5,{animate:true});
@@ -758,12 +792,8 @@ document.addEventListener('touchend',e=>{
   const dy=e.changedTouches[0].clientY-touchStartY;
 
   if(Math.abs(dy)>Math.abs(dx))return;
-
   if(touchStartX<35&&dx>90)openMenu();
-
-  if(drawer.classList.contains('open')&&dx< -90){
-    closeMenu();
-  }
+  if(drawer.classList.contains('open')&&dx< -90)closeMenu();
 },{passive:true});
 </script>
 </body>
