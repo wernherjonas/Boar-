@@ -1,22 +1,1074 @@
-SQL
-create policy "Users can upload their own avatar"
-on storage.objects
-for insert
-to authenticated
-with check (
-  bucket_id = 'avatars'
-  and (storage.foldername(name))[1] = auth.uid()::text
+HTML
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<title>BOAR — Ride your line</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080808;--panel:#111;--panel2:#181818;--white:#fff;--muted:#888;--line:#292929}
+body{background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif;min-height:100vh;overflow-x:hidden}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+#authScreen{position:fixed;inset:0;z-index:5000;background:#080808;display:flex;align-items:center;justify-content:center;padding:24px;overflow-y:auto}
+.auth-box{width:100%;max-width:390px}
+.logo{font-size:48px;font-weight:1000;letter-spacing:7px;text-align:center}
+.tagline{text-align:center;color:#888;font-size:10px;letter-spacing:5px;margin:8px 0 38px}
+.auth-title{font-size:25px;font-weight:800;margin-bottom:9px}
+.auth-sub{font-size:13px;color:#888;margin-bottom:25px;line-height:1.5}
+.field{margin-bottom:15px}
+.field label{display:block;color:#aaa;font-size:11px;margin-bottom:8px;letter-spacing:1px}
+.field input,.field textarea{width:100%;padding:16px;background:#141414;border:1px solid #303030;border-radius:8px;color:white;outline:none}
+.field input:focus,.field textarea:focus{border-color:#aaa}
+.field textarea{min-height:95px;resize:vertical;line-height:1.5}
+.password-input-wrap{position:relative;width:100%}
+.password-input-wrap input{padding-right:55px}
+.password-toggle{position:absolute;right:0;top:0;height:100%;width:50px;border:0;background:transparent;color:#aaa;display:flex;align-items:center;justify-content:center}
+.password-toggle svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.password-toggle:focus{outline:1px solid #777;border-radius:5px}
+.primary{width:100%;padding:16px;border:0;border-radius:8px;background:white;color:black;font-weight:900;margin-top:8px}
+.secondary{width:100%;padding:14px;border:1px solid #333;border-radius:8px;background:transparent;color:white;margin-top:10px}
+.auth-switch{text-align:center;color:#888;font-size:13px;margin-top:22px}
+.auth-switch button{background:none;border:0;color:white;text-decoration:underline}
+.forgot{text-align:right;margin:5px 0 12px}
+.forgot button{background:none;border:0;color:#aaa;font-size:12px;text-decoration:underline}
+#authMessage{font-size:13px;color:#ddd;line-height:1.5;margin-top:16px;text-align:center;min-height:20px}
+.password-rules{background:#111;border:1px solid #292929;border-radius:8px;padding:13px;margin-top:-5px;margin-bottom:16px}
+.password-rules-title{font-size:11px;color:#aaa;margin-bottom:10px}
+.password-rule{font-size:11px;color:#777;margin:7px 0;display:flex;align-items:center;gap:8px}
+.password-rule .rule-icon{width:15px;height:15px;border:1px solid #555;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.password-rule.valid{color:#eee}
+.password-rule.valid .rule-icon{background:white;color:black;border-color:white}
+
+header{height:62px;position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,8,8,.94);border-bottom:1px solid #222;display:flex;align-items:center;padding:0 17px;gap:18px}
+.menu-btn{background:none;border:0;color:white;font-size:25px}
+.header-logo{font-size:21px;font-weight:1000;letter-spacing:4px}
+.header-right{margin-left:auto;color:#aaa;font-size:11px}
+
+#drawer{position:fixed;z-index:1500;top:0;bottom:0;left:0;width:70%;max-width:310px;background:#101010;border-right:1px solid #333;padding:30px 22px;transform:translateX(-105%);transition:transform .3s ease}
+#drawer.open{transform:translateX(0)}
+.drawer-top{font-size:25px;font-weight:1000;letter-spacing:5px;margin:20px 0 35px}
+.drawer-item{display:block;width:100%;text-align:left;padding:17px 4px;border:0;border-bottom:1px solid #242424;background:none;color:#eee;font-size:15px}
+.drawer-item.active{font-weight:900;color:white}
+.drawer-bottom{position:absolute;bottom:30px;left:22px;right:22px;color:#777;font-size:12px}
+#shade{position:fixed;inset:0;background:#0009;z-index:1400;display:none}
+#shade.show{display:block}
+
+main{padding-top:62px;padding-bottom:0;min-height:100vh}
+.page{display:none;min-height:calc(100vh - 62px)}
+.page.active{display:block}
+
+.home-hero{height:58vh;min-height:360px;position:relative;background:linear-gradient(0deg,#080808 0%,transparent 65%),linear-gradient(90deg,#0007,#0000),url('https://images.unsplash.com/photo-1544191696-15693072a2c5?auto=format&fit=crop&w=1400&q=85') center/cover}
+.hero-content{position:absolute;bottom:28px;left:22px;right:22px}
+.hero-small{font-size:10px;letter-spacing:4px;color:#ddd}
+.hero-title{font-size:40px;font-weight:1000;line-height:1;margin-top:10px}
+.hero-desc{font-size:13px;color:#ccc;margin-top:10px}
+.section{padding:24px 18px}
+.section-heading{font-size:17px;font-weight:900;letter-spacing:1px;margin-bottom:18px}
+.news-card{height:145px;border-radius:9px;overflow:hidden;position:relative;margin-bottom:12px;background:#171717}
+.news-card img{width:100%;height:100%;object-fit:cover;opacity:.65}
+.news-card div{position:absolute;bottom:14px;left:15px;font-weight:900;font-size:16px}
+
+/* CARTE */
+#map.page{height:calc(100vh - 62px);min-height:calc(100vh - 62px);padding:0;position:relative;overflow:hidden}
+#mapCanvas{height:100%!important;width:100%;background:#171717}
+.map-toolbar{position:absolute;top:14px;left:12px;z-index:500;display:flex;flex-direction:column;gap:7px;max-height:calc(100% - 75px);overflow-y:auto}
+.map-toolbar button{background:#090909e8;color:white;border:1px solid #444;padding:9px 11px;border-radius:5px;font-size:11px;text-align:left}
+.map-toolbar button:active{background:#333}
+.map-hint{position:absolute;bottom:15px;left:12px;z-index:500;background:#090909df;padding:10px 13px;border-radius:5px;font-size:11px;color:#ddd;pointer-events:none}
+.leaflet-container{background:#222}
+.leaflet-control-attribution{font-size:9px!important}
+.leaflet-control-zoom a{background:#090909!important;color:white!important;border-color:#444!important}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#111;color:white}
+.leaflet-popup-content{font-size:12px}
+.bikepark-marker{width:36px;height:36px;border:2px solid white;border-radius:50%;background:#080808;color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;letter-spacing:-.5px;box-shadow:0 2px 9px #000b}
+
+/* VIDÉOS */
+.video-tabs{display:flex;justify-content:center;gap:25px;padding:17px}
+.video-tabs button{background:none;border:0;color:#888;font-weight:800;font-size:12px}
+.video-tabs button.active{color:white;border-bottom:2px solid white;padding-bottom:7px}
+.video-card{height:calc(100vh - 220px);min-height:400px;margin:0 10px 15px;background:#181818;border-radius:9px;position:relative;overflow:hidden}
+.video-card img{width:100%;height:100%;object-fit:cover;opacity:.8}
+.video-overlay{position:absolute;bottom:20px;left:17px;right:17px;text-shadow:0 1px 5px #000}
+.video-overlay h3{font-size:18px;margin-bottom:7px}
+.video-overlay p{font-size:12px;color:#ddd}
+.video-plus{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);z-index:900;border:1px solid #777;background:#fff;color:#080808;width:52px;height:52px;border-radius:50%;font-size:30px;font-weight:300}
+
+.group-card,.profile-card,.settings-card{background:#121212;border:1px solid #292929;border-radius:9px;padding:18px;margin-bottom:12px}
+.group-card h3,.profile-card h3,.settings-card h3{font-size:15px;margin-bottom:7px}
+.group-card p,.profile-card p{font-size:12px;color:#888;line-height:1.5}
+.action-btn{padding:12px 15px;border:1px solid #555;background:transparent;color:white;border-radius:6px;font-size:12px;margin-top:12px}
+.profile-top{display:flex;align-items:center;gap:15px;margin:20px 0 25px}
+.avatar{height:75px;width:75px;min-width:75px;border-radius:50%;background:#eee;color:#080808;display:flex;align-items:center;justify-content:center;font-size:27px;font-weight:900;overflow:hidden;position:relative}
+.avatar img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.profile-name{font-size:19px;font-weight:900}
+.profile-email{font-size:12px;color:#888;margin-top:5px}
+.profile-bio{font-size:12px;color:#aaa;line-height:1.5;margin-top:8px;max-width:260px;overflow-wrap:anywhere}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}
+.profile-stat{background:#121212;border:1px solid #292929;border-radius:8px;padding:14px 5px;text-align:center}
+.profile-stat strong{display:block;font-size:19px}
+.profile-stat span{display:block;font-size:10px;color:#888;margin-top:5px}
+.profile-edit{background:#111;border:1px solid #303030;border-radius:9px;padding:17px;margin:18px 0}
+.profile-edit h3{font-size:15px;margin-bottom:18px}
+.profile-edit .field{margin-bottom:15px}
+.profile-edit .field input,.profile-edit .field textarea{font-size:14px}
+.photo-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+.photo-button{display:inline-flex;align-items:center;justify-content:center;padding:11px 13px;border:1px solid #555;border-radius:6px;background:#191919;color:white;font-size:11px}
+.photo-note{font-size:10px;color:#777;line-height:1.5;margin-top:9px}
+.profile-save{width:100%;padding:15px;border:0;border-radius:7px;background:white;color:black;font-size:12px;font-weight:900;margin-top:5px}
+.empty-profile{background:#111;border:1px solid #292929;border-radius:8px;padding:16px;margin-bottom:10px}
+.empty-profile strong{font-size:13px}
+.empty-profile p{font-size:11px;color:#888;margin-top:6px;line-height:1.5}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#eee;color:#111;padding:12px 18px;border-radius:7px;font-size:12px;z-index:6000;max-width:90%;text-align:center}
+</style>
+</head>
+
+<body>
+
+<div id="authScreen">
+ <div class="auth-box">
+  <div class="logo">BOAR</div>
+  <div class="tagline">RIDE YOUR LINE</div>
+
+  <div id="loginPanel">
+   <div class="auth-title">Connexion</div>
+   <div class="auth-sub">Connecte-toi pour retrouver la communauté BOAR.</div>
+   <div class="field">
+    <label>ADRESSE E-MAIL</label>
+    <input id="loginEmail" type="email" placeholder="ton@email.com" autocomplete="email">
+   </div>
+   <div class="field">
+    <label>MOT DE PASSE</label>
+    <div class="password-input-wrap">
+     <input id="loginPassword" type="password" placeholder="Ton mot de passe" autocomplete="current-password">
+     <button class="password-toggle" type="button" onclick="togglePassword('loginPassword',this)" aria-label="Afficher le mot de passe" aria-pressed="false">
+      <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+     </button>
+    </div>
+   </div>
+   <div class="forgot"><button onclick="forgotPassword()">Mot de passe oublié ?</button></div>
+   <button class="primary" onclick="login()">SE CONNECTER</button>
+   <div class="auth-switch">Pas encore de compte ? <button onclick="showSignup()">Créer un compte</button></div>
+  </div>
+
+  <div id="signupPanel" class="hidden">
+   <div class="auth-title">Créer un compte</div>
+   <div class="auth-sub">Rejoins BOAR et retrouve les autres riders.</div>
+   <div class="field">
+    <label>TON PSEUDO</label>
+    <input id="signupName" type="text" placeholder="Ton pseudo" autocomplete="nickname">
+   </div>
+   <div class="field">
+    <label>ADRESSE E-MAIL</label>
+    <input id="signupEmail" type="email" placeholder="ton@email.com" autocomplete="email">
+   </div>
+   <div class="field">
+    <label>MOT DE PASSE</label>
+    <div class="password-input-wrap">
+     <input id="signupPassword" type="password" placeholder="Crée ton mot de passe" autocomplete="new-password" oninput="updatePasswordRules()">
+     <button class="password-toggle" type="button" onclick="togglePassword('signupPassword',this)" aria-label="Afficher le mot de passe" aria-pressed="false">
+      <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+     </button>
+    </div>
+   </div>
+   <div class="password-rules">
+    <div class="password-rules-title">TON MOT DE PASSE DOIT CONTENIR :</div>
+    <div class="password-rule" id="ruleLength"><span class="rule-icon">✓</span> 8 caractères minimum</div>
+    <div class="password-rule" id="ruleLower"><span class="rule-icon">✓</span> Une lettre minuscule (a-z)</div>
+    <div class="password-rule" id="ruleUpper"><span class="rule-icon">✓</span> Une lettre majuscule (A-Z)</div>
+    <div class="password-rule" id="ruleNumber"><span class="rule-icon">✓</span> Un chiffre (0-9)</div>
+    <div class="password-rule" id="ruleSpecial"><span class="rule-icon">✓</span> Un caractère spécial (!, @, #...)</div>
+   </div>
+   <button class="primary" onclick="signup()">CRÉER MON COMPTE</button>
+   <div class="auth-switch">Déjà inscrit ? <button onclick="showLogin()">Se connecter</button></div>
+  </div>
+
+  <div id="resetPanel" class="hidden">
+   <div class="auth-title">Mot de passe oublié</div>
+   <div class="auth-sub">Indique ton adresse e-mail pour recevoir un lien de réinitialisation.</div>
+   <div class="field">
+    <label>ADRESSE E-MAIL</label>
+    <input id="resetEmail" type="email" placeholder="ton@email.com">
+   </div>
+   <button class="primary" onclick="sendReset()">ENVOYER LE LIEN</button>
+   <div class="auth-switch"><button onclick="showLogin()">Retour à la connexion</button></div>
+  </div>
+  <div id="authMessage"></div>
+ </div>
+</div>
+
+<!-- MENU -->
+<div id="shade" onclick="closeMenu()"></div>
+<aside id="drawer">
+ <div class="drawer-top">BOAR</div>
+ <button class="drawer-item active" onclick="go('home')">Accueil</button>
+ <button class="drawer-item" onclick="go('map')">Carte</button>
+ <button class="drawer-item" onclick="go('groups')">Groupes</button>
+ <button class="drawer-item" onclick="go('videos')">Vidéos</button>
+ <button class="drawer-item" onclick="go('profile')">Profil</button>
+ <button class="drawer-item" onclick="go('settings')">Paramètres</button>
+ <div class="drawer-bottom">RIDE YOUR LINE.<br>BOAR COMMUNITY</div>
+</aside>
+
+<header id="appHeader" class="hidden">
+ <button class="menu-btn" onclick="openMenu()">☰</button>
+ <div class="header-logo">BOAR</div>
+ <div class="header-right" id="headerUser">RIDER</div>
+</header>
+
+<main id="appMain" class="hidden">
+
+ <section id="home" class="page active">
+  <div class="home-hero">
+   <div class="hero-content">
+    <div class="hero-small">VTT • DH • ENDURO</div>
+    <div class="hero-title">RIDE YOUR<br>LINE.</div>
+    <div class="hero-desc">Trouve ton prochain spot. Roule avec ta communauté.</div>
+   </div>
+  </div>
+  <div class="section">
+   <div class="section-heading">ACTUALITÉS</div>
+   <div class="news-card">
+    <img src="https://images.unsplash.com/photo-1544191696-15693072a2c5?auto=format&fit=crop&w=1000&q=80" alt="VTT en montagne">
+    <div>LA COMMUNAUTÉ BOAR</div>
+   </div>
+   <div class="news-card">
+    <img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=1000&q=80" alt="Vélo">
+    <div>À LA RECHERCHE DE NOUVEAUX SPOTS</div>
+   </div>
+  </div>
+ </section>
+
+ <section id="map" class="page">
+  <div id="mapCanvas"></div>
+  <div class="map-toolbar">
+   <button onclick="filterSpots('all')">Tous les spots</button>
+   <button onclick="filterSpots('public')">Terrains publics</button>
+   <button onclick="filterSpots('private')">Terrains privés</button>
+   <button onclick="filterSpots('park')">Bike parks</button>
+   <button onclick="filterSpots('trail')">Tracés</button>
+   <button onclick="locateMe()">Ma position</button>
+  </div>
+  <div class="map-hint">Explore les spots autour de toi</div>
+ </section>
+
+ <section id="groups" class="page">
+  <div class="section">
+   <div class="section-heading">GROUPES</div>
+   <div class="group-card">
+    <h3>Riders près de chez toi</h3>
+    <p>Retrouve des personnes avec qui rouler. La création de groupes partagés sera activée avec le système de données BOAR.</p>
+    <button class="action-btn" onclick="toast('Les groupes seront activés dans une prochaine étape.')">DÉCOUVRIR</button>
+   </div>
+   <div class="group-card">
+    <h3>Sorties VTT</h3>
+    <p>Organise tes prochaines sorties avec la communauté.</p>
+    <button class="action-btn" onclick="toast('La création de sorties sera bientôt disponible.')">CRÉER UNE SORTIE</button>
+   </div>
+  </div>
+ </section>
+
+ <section id="videos" class="page">
+  <div class="video-tabs">
+   <button id="tabTerrain" class="active" onclick="videoTab('terrain')">TERRAINS</button>
+   <button id="tabRide" onclick="videoTab('ride')">VIDÉOS VTT</button>
+  </div>
+  <div id="terrainFeed">
+   <div class="video-card">
+    <img src="https://images.unsplash.com/photo-1544191696-15693072a2c5?auto=format&fit=crop&w=1000&q=85" alt="Terrain de VTT">
+    <div class="video-overlay"><h3>PRÉSENTATION DE TERRAIN</h3><p>Découvre de nouveaux spots.</p></div>
+   </div>
+  </div>
+  <div id="rideFeed" class="hidden">
+   <div class="video-card">
+    <img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=1000&q=85" alt="VTT">
+    <div class="video-overlay"><h3>RIDE YOUR LINE</h3><p>Les vidéos de la communauté.</p></div>
+   </div>
+  </div>
+  <button class="video-plus" onclick="toast('La publication de vidéos sera activée avec le stockage BOAR.')">+</button>
+ </section>
+
+ <!-- PROFIL -->
+ <section id="profile" class="page">
+  <div class="section">
+   <div class="section-heading">MON PROFIL</div>
+
+   <div class="profile-top">
+    <div class="avatar" id="profileAvatar">
+     <span id="profileAvatarLetter">B</span>
+     <img id="profileAvatarImage" class="hidden" alt="Photo de profil">
+    </div>
+    <div>
+     <div class="profile-name" id="profileName">Rider</div>
+     <div class="profile-email" id="profileEmail"></div>
+     <div class="profile-bio" id="profileBio">Aucune bio pour le moment.</div>
+    </div>
+   </div>
+
+   <div class="profile-stats">
+    <div class="profile-stat"><strong>0</strong><span>VIDÉOS</span></div>
+    <div class="profile-stat"><strong>0</strong><span>TERRAINS</span></div>
+    <div class="profile-stat"><strong>0</strong><span>TRACÉS</span></div>
+   </div>
+
+   <div class="profile-edit">
+    <h3>MODIFIER MON PROFIL</h3>
+
+    <div class="field">
+     <label>MON PSEUDO</label>
+     <input id="editProfileName" type="text" maxlength="30" placeholder="Ton pseudo">
+    </div>
+
+    <div class="field">
+     <label>MA BIOGRAPHIE</label>
+     <textarea id="editProfileBio" maxlength="160" placeholder="Présente-toi aux autres riders..."></textarea>
+    </div>
+
+    <div class="field">
+     <label>MA PHOTO DE PROFIL</label>
+     <input id="avatarFile" type="file" accept="image/*" class="hidden" onchange="handleAvatarChange(event)">
+     <div class="photo-actions">
+      <label for="avatarFile" class="photo-button">CHOISIR UNE PHOTO</label>
+      <button type="button" class="photo-button" onclick="removeAvatar()">RETIRER LA PHOTO</button>
+     </div>
+     <div class="photo-note">Choisis une image depuis ton téléphone. La photo sera envoyée dans le stockage BOAR.</div>
+    </div>
+
+    <button class="profile-save" id="saveProfileButton" onclick="saveProfile()">ENREGISTRER LES MODIFICATIONS</button>
+   </div>
+
+   <div class="section-heading" style="margin-top:25px">MON ACTIVITÉ</div>
+   <div class="empty-profile">
+    <strong>Mes vidéos</strong>
+    <p>Tes vidéos publiées apparaîtront ici lorsque la publication sera activée.</p>
+   </div>
+   <div class="empty-profile">
+    <strong>Mes terrains</strong>
+    <p>Les terrains que tu ajouteras à BOAR apparaîtront ici.</p>
+   </div>
+   <div class="empty-profile">
+    <strong>Mes tracés</strong>
+    <p>Les itinéraires que tu enregistreras apparaîtront ici.</p>
+   </div>
+
+   <button class="action-btn" onclick="go('settings')">PARAMÈTRES</button>
+   <button class="action-btn" onclick="logout()">SE DÉCONNECTER</button>
+  </div>
+ </section>
+
+ <section id="settings" class="page">
+  <div class="section">
+   <div class="section-heading">PARAMÈTRES</div>
+   <div class="settings-card">
+    <h3>Compte</h3>
+    <p id="settingsEmail" style="color:#888;font-size:12px;margin-top:8px"></p>
+    <button class="action-btn" onclick="logout()">SE DÉCONNECTER</button>
+   </div>
+   <div class="settings-card">
+    <h3>BOAR</h3>
+    <p style="color:#888;font-size:12px;margin-top:8px">Version de développement</p>
+   </div>
+  </div>
+ </section>
+
+</main>
+
+<div id="toastBox" class="toast hidden"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+// =====================================
+// SUPABASE — CLÉ ORIGINALE CONSERVÉE
+// =====================================
+
+const SUPABASE_URL = "https://xvzooqfqteuayhwwfjet.supabase.co";
+
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2em9vcWZxdGV1YXlod3dmamV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM5Nzg4MjYsImV4cCI6MjEwOTU1NDgyNn0.advAkx1dc2xvJXowMHxEAZx1zHwYmjuEIMEs6yLCnzk";
+
+if(!window.supabase){
+ alert("Impossible de charger Supabase. Vérifie ta connexion Internet puis recharge BOAR.");
+ throw new Error("La bibliothèque Supabase n'a pas pu être chargée.");
+}
+
+const supabaseClient=window.supabase.createClient(
+ SUPABASE_URL,
+ SUPABASE_KEY,
+ {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}
 );
 
-create policy "Users can update their own avatar"
-on storage.objects
-for update
-to authenticated
-using (
-  bucket_id = 'avatars'
-  and (storage.foldername(name))[1] = auth.uid()::text
-)
-with check (
-  bucket_id = 'avatars'
-  and (storage.foldername(name))[1] = auth.uid()::text
-);
+// =====================================
+// DONNÉES DU PROFIL
+// =====================================
+
+let currentUser=null;
+let selectedAvatarFile=null;
+let avatarPreviewUrl=null;
+let avatarMustBeRemoved=false;
+
+function displayAvatar(url,username){
+ const image=document.getElementById("profileAvatarImage");
+ const letter=document.getElementById("profileAvatarLetter");
+
+ letter.textContent=(username||"B").trim().charAt(0).toUpperCase()||"B";
+
+ if(url){
+  image.src=url;
+  image.classList.remove("hidden");
+  letter.classList.add("hidden");
+
+  image.onerror=()=>{
+   image.classList.add("hidden");
+   letter.classList.remove("hidden");
+  };
+ }else{
+  image.removeAttribute("src");
+  image.classList.add("hidden");
+  letter.classList.remove("hidden");
+ }
+}
+
+function loadProfile(user){
+ if(!user)return;
+
+ const metadata=user.user_metadata||{};
+ const username=metadata.username||user.email.split("@")[0];
+ const bio=metadata.bio||"";
+ const avatarUrl=metadata.avatar_url||"";
+
+ document.getElementById("headerUser").textContent=username.toUpperCase();
+ document.getElementById("profileName").textContent=username;
+ document.getElementById("profileEmail").textContent=user.email||"";
+ document.getElementById("profileBio").textContent=bio||"Aucune bio pour le moment.";
+ document.getElementById("settingsEmail").textContent=user.email||"";
+
+ document.getElementById("editProfileName").value=username;
+ document.getElementById("editProfileBio").value=bio;
+
+ displayAvatar(avatarUrl,username);
+}
+
+// =====================================
+// PHOTO DE PROFIL
+// =====================================
+
+function handleAvatarChange(event){
+ const file=event.target.files&&event.target.files[0];
+
+ if(!file)return;
+
+ if(!file.type.startsWith("image/")){
+  toast("Choisis un fichier image.");
+  event.target.value="";
+  return;
+ }
+
+ if(file.size>5*1024*1024){
+  toast("La photo doit faire moins de 5 Mo.");
+  event.target.value="";
+  return;
+ }
+
+ selectedAvatarFile=file;
+ avatarMustBeRemoved=false;
+
+ if(avatarPreviewUrl)URL.revokeObjectURL(avatarPreviewUrl);
+ avatarPreviewUrl=URL.createObjectURL(file);
+
+ const username=document.getElementById("editProfileName").value||"Rider";
+ displayAvatar(avatarPreviewUrl,username);
+
+ toast("Photo sélectionnée. Pense à enregistrer ton profil.");
+}
+
+function removeAvatar(){
+ selectedAvatarFile=null;
+ avatarMustBeRemoved=true;
+
+ if(avatarPreviewUrl){
+  URL.revokeObjectURL(avatarPreviewUrl);
+  avatarPreviewUrl=null;
+ }
+
+ document.getElementById("avatarFile").value="";
+ const username=document.getElementById("editProfileName").value||"Rider";
+ displayAvatar("",username);
+
+ toast("La photo sera retirée lorsque tu enregistreras.");
+}
+
+// Réduit la taille de la photo avant l'envoi.
+function compressAvatar(file){
+ return new Promise((resolve,reject)=>{
+  const reader=new FileReader();
+
+  reader.onerror=()=>reject(new Error("Lecture de la photo impossible."));
+
+  reader.onload=()=>{
+   const image=new Image();
+
+   image.onerror=()=>reject(new Error("Image invalide."));
+
+   image.onload=()=>{
+    const maxSize=600;
+    let width=image.width;
+    let height=image.height;
+
+    if(width>height&&width>maxSize){
+     height=Math.round(height*maxSize/width);
+     width=maxSize;
+    }else if(height>maxSize){
+     width=Math.round(width*maxSize/height);
+     height=maxSize;
+    }
+
+    const canvas=document.createElement("canvas");
+    canvas.width=width;
+    canvas.height=height;
+
+    const context=canvas.getContext("2d");
+    context.drawImage(image,0,0,width,height);
+
+    canvas.toBlob(blob=>{
+     if(blob)resolve(blob);
+     else reject(new Error("Compression de la photo impossible."));
+    },"image/jpeg",0.82);
+   };
+
+   image.src=reader.result;
+  };
+
+  reader.readAsDataURL(file);
+ });
+}
+
+// =====================================
+// ENREGISTREMENT DU PROFIL
+// =====================================
+
+async function saveProfile(){
+ if(!currentUser){
+  toast("Connecte-toi pour modifier ton profil.");
+  return;
+ }
+
+ const username=document.getElementById("editProfileName").value.trim();
+ const bio=document.getElementById("editProfileBio").value.trim();
+ const button=document.getElementById("saveProfileButton");
+
+ if(username.length<2){
+  toast("Ton pseudo doit contenir au moins 2 caractères.");
+  return;
+ }
+
+ if(username.length>30){
+  toast("Ton pseudo est trop long.");
+  return;
+ }
+
+ button.disabled=true;
+ button.textContent="ENREGISTREMENT...";
+
+ try{
+  let avatarUrl=currentUser.user_metadata?.avatar_url||"";
+
+  // Envoi de la nouvelle photo dans Supabase Storage.
+  if(selectedAvatarFile){
+   const imageBlob=await compressAvatar(selectedAvatarFile);
+   const avatarPath=currentUser.id+"/avatar.jpg";
+
+   const {error:uploadError}=await supabaseClient
+    .storage
+    .from("avatars")
+    .upload(avatarPath,imageBlob,{
+     upsert:true,
+     contentType:"image/jpeg",
+     cacheControl:"3600"
+    });
+
+   if(uploadError){
+    throw new Error("La photo n'a pas pu être envoyée. Vérifie que le stockage « avatars » existe dans Supabase.");
+   }
+
+   const {data:publicData}=supabaseClient
+    .storage
+    .from("avatars")
+    .getPublicUrl(avatarPath);
+
+   avatarUrl=publicData.publicUrl+"?v="+Date.now();
+  }
+
+  if(avatarMustBeRemoved){
+   avatarUrl="";
+  }
+
+  // Enregistrement du pseudo, de la bio et de la photo dans le compte.
+  const {data,error}=await supabaseClient.auth.updateUser({
+   data:{
+    username:username,
+    bio:bio,
+    avatar_url:avatarUrl
+   }
+  });
+
+  if(error)throw error;
+
+  currentUser=data.user;
+  selectedAvatarFile=null;
+  avatarMustBeRemoved=false;
+
+  if(avatarPreviewUrl){
+   URL.revokeObjectURL(avatarPreviewUrl);
+   avatarPreviewUrl=null;
+  }
+
+  document.getElementById("avatarFile").value="";
+  loadProfile(currentUser);
+
+  toast("Ton profil BOAR a bien été enregistré.");
+
+ }catch(error){
+  console.error(error);
+  toast(error.message||"Une erreur est survenue pendant l'enregistrement.");
+ }finally{
+  button.disabled=false;
+  button.textContent="ENREGISTRER LES MODIFICATIONS";
+ }
+}
+
+// =====================================
+// MOT DE PASSE
+// =====================================
+
+function togglePassword(inputId,button){
+ const input=document.getElementById(inputId);
+ const showing=input.type==="password";
+ input.type=showing?"text":"password";
+
+ button.innerHTML=showing
+ ? '<svg viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M10.6 10.6a2 2 0 002.8 2.8"/><path d="M9.9 5.2A10.8 10.8 0 0112 5c6.5 0 10 7 10 7a15 15 0 01-3.1 3.8"/><path d="M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7a10 10 0 004-.8"/></svg>'
+ : '<svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+
+ button.setAttribute("aria-label",showing?"Masquer le mot de passe":"Afficher le mot de passe");
+ button.setAttribute("aria-pressed",showing?"true":"false");
+}
+
+// =====================================
+// ÉCRANS DE CONNEXION
+// =====================================
+
+function authMessage(message){
+ document.getElementById("authMessage").textContent=message;
+}
+
+function showLogin(){
+ document.getElementById("loginPanel").classList.remove("hidden");
+ document.getElementById("signupPanel").classList.add("hidden");
+ document.getElementById("resetPanel").classList.add("hidden");
+ authMessage("");
+}
+
+function showSignup(){
+ document.getElementById("loginPanel").classList.add("hidden");
+ document.getElementById("signupPanel").classList.remove("hidden");
+ document.getElementById("resetPanel").classList.add("hidden");
+ authMessage("");
+ updatePasswordRules();
+}
+
+function showReset(){
+ document.getElementById("loginPanel").classList.add("hidden");
+ document.getElementById("signupPanel").classList.add("hidden");
+ document.getElementById("resetPanel").classList.remove("hidden");
+ authMessage("");
+}
+
+function checkPassword(password){
+ return {
+  length:password.length>=8,
+  lower:/[a-z]/.test(password),
+  upper:/[A-Z]/.test(password),
+  number:/[0-9]/.test(password),
+  special:/[^A-Za-z0-9]/.test(password)
+ };
+}
+
+function updatePasswordRules(){
+ const password=document.getElementById("signupPassword").value;
+ const rules=checkPassword(password);
+ const ruleIds={length:"ruleLength",lower:"ruleLower",upper:"ruleUpper",number:"ruleNumber",special:"ruleSpecial"};
+
+ Object.keys(ruleIds).forEach(key=>{
+  const element=document.getElementById(ruleIds[key]);
+  const valid=rules[key];
+  element.classList.toggle("valid",valid);
+  element.querySelector(".rule-icon").textContent=valid?"✓":"";
+ });
+
+ return Object.values(rules).every(Boolean);
+}
+
+// =====================================
+// CRÉATION DU COMPTE
+// =====================================
+
+async function signup(){
+ const name=document.getElementById("signupName").value.trim();
+ const email=document.getElementById("signupEmail").value.trim();
+ const password=document.getElementById("signupPassword").value;
+
+ if(!name||!email||!password){authMessage("Remplis tous les champs.");return}
+ if(!email.includes("@")||!email.includes(".")){authMessage("Entre une adresse e-mail valide.");return}
+ if(!updatePasswordRules()){authMessage("Ton mot de passe ne respecte pas encore toutes les règles.");return}
+
+ authMessage("Création du compte en cours...");
+
+ const {data,error}=await supabaseClient.auth.signUp({
+  email,password,
+  options:{
+   data:{username:name,bio:"",avatar_url:""},
+   emailRedirectTo:"https://wernherjonas.github.io/Boar-/"
+  }
+ });
+
+ if(error){authMessage(error.message);return}
+
+ if(data.session){enterApp(data.session.user)}
+ else{authMessage("Compte créé ! Vérifie ta boîte e-mail et clique sur le lien de confirmation pour activer ton compte.")}
+}
+
+// =====================================
+// CONNEXION
+// =====================================
+
+async function login(){
+ const email=document.getElementById("loginEmail").value.trim();
+ const password=document.getElementById("loginPassword").value;
+
+ if(!email||!password){authMessage("Entre ton adresse e-mail et ton mot de passe.");return}
+
+ authMessage("Connexion en cours...");
+
+ const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+
+ if(error){authMessage(error.message);return}
+ enterApp(data.user);
+}
+
+// =====================================
+// MOT DE PASSE OUBLIÉ
+// =====================================
+
+async function forgotPassword(){
+ showReset();
+ const oldEmail=document.getElementById("loginEmail").value.trim();
+ document.getElementById("resetEmail").value=oldEmail;
+}
+
+async function sendReset(){
+ const email=document.getElementById("resetEmail").value.trim();
+
+ if(!email){authMessage("Entre ton adresse e-mail.");return}
+
+ authMessage("Envoi du lien en cours...");
+
+ const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{
+  redirectTo:"https://wernherjonas.github.io/Boar-/"
+ });
+
+ if(error){authMessage(error.message)}
+ else{authMessage("Si cette adresse correspond à un compte, un e-mail de réinitialisation va être envoyé.")}
+}
+
+// =====================================
+// DÉCONNEXION
+// =====================================
+
+async function logout(){
+ const {error}=await supabaseClient.auth.signOut();
+
+ if(error){toast(error.message);return}
+
+ currentUser=null;
+ document.getElementById("appHeader").classList.add("hidden");
+ document.getElementById("appMain").classList.add("hidden");
+ document.getElementById("authScreen").classList.remove("hidden");
+ showLogin();
+ toast("Déconnexion effectuée.");
+}
+
+// =====================================
+// OUVERTURE DE L'APPLICATION
+// =====================================
+
+function enterApp(user){
+ if(!user)return;
+
+ currentUser=user;
+
+ document.getElementById("authScreen").classList.add("hidden");
+ document.getElementById("appHeader").classList.remove("hidden");
+ document.getElementById("appMain").classList.remove("hidden");
+
+ loadProfile(user);
+
+ setTimeout(()=>{
+  if(document.getElementById("map").classList.contains("active")&&map){
+   map.invalidateSize();
+  }
+ },300);
+}
+
+supabaseClient.auth.onAuthStateChange((event,session)=>{
+ if(session?.user){enterApp(session.user)}
+ else if(event==="SIGNED_OUT"){
+  currentUser=null;
+  document.getElementById("authScreen").classList.remove("hidden");
+  document.getElementById("appHeader").classList.add("hidden");
+  document.getElementById("appMain").classList.add("hidden");
+ }
+});
+
+async function checkSession(){
+ const {data,error}=await supabaseClient.auth.getSession();
+ if(error){console.error(error);return}
+ if(data.session?.user){enterApp(data.session.user)}
+}
+checkSession();
+
+// =====================================
+// NAVIGATION
+// =====================================
+
+function go(page){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+
+ const target=document.getElementById(page);
+ if(target)target.classList.add("active");
+
+ document.querySelectorAll(".drawer-item").forEach(b=>b.classList.remove("active"));
+
+ const drawerIndex={home:0,map:1,groups:2,videos:3,profile:4,settings:5}[page];
+ const drawerButtons=[...document.querySelectorAll(".drawer-item")];
+
+ if(drawerIndex!==undefined)drawerButtons[drawerIndex].classList.add("active");
+
+ closeMenu();
+
+ if(page==="map"){
+  setTimeout(()=>{
+   initializeMap();
+   if(map)map.invalidateSize();
+  },200);
+ }
+
+ if(page==="profile"&&currentUser){
+  loadProfile(currentUser);
+ }
+}
+
+// =====================================
+// MENU : BOUTON + GLISSEMENT
+// =====================================
+
+function openMenu(){
+ document.getElementById("drawer").classList.add("open");
+ document.getElementById("shade").classList.add("show");
+}
+
+function closeMenu(){
+ document.getElementById("drawer").classList.remove("open");
+ document.getElementById("shade").classList.remove("show");
+}
+
+let touchStartX=0;
+let touchStartY=0;
+let touchEndX=0;
+let touchEndY=0;
+let trackingGesture=false;
+
+document.addEventListener("touchstart",function(e){
+ if(e.touches.length!==1)return;
+
+ touchStartX=e.touches[0].clientX;
+ touchStartY=e.touches[0].clientY;
+ touchEndX=touchStartX;
+ touchEndY=touchStartY;
+ trackingGesture=true;
+},{passive:true});
+
+document.addEventListener("touchmove",function(e){
+ if(!trackingGesture||e.touches.length!==1)return;
+ touchEndX=e.touches[0].clientX;
+ touchEndY=e.touches[0].clientY;
+},{passive:true});
+
+document.addEventListener("touchend",function(){
+ if(!trackingGesture)return;
+
+ const diffX=touchEndX-touchStartX;
+ const diffY=Math.abs(touchEndY-touchStartY);
+ const drawerOpen=document.getElementById("drawer").classList.contains("open");
+
+ if(!drawerOpen&&touchStartX<35&&diffX>75&&Math.abs(diffX)>diffY*1.2){
+  openMenu();
+ }
+
+ if(drawerOpen&&touchStartX<320&&diffX<-75&&Math.abs(diffX)>diffY*1.2){
+  closeMenu();
+ }
+
+ trackingGesture=false;
+},{passive:true});
+
+document.addEventListener("touchcancel",function(){
+ trackingGesture=false;
+},{passive:true});
+
+// =====================================
+// CARTE BOAR ET BIKE PARKS
+// =====================================
+
+let map=null;
+let markers=[];
+
+const spots=[
+ {name:"Spot forestier",lat:50.625,lng:5.575,type:"public",country:"Belgique"},
+ {name:"Terrain privé",lat:50.645,lng:5.605,type:"private",country:"Belgique"},
+ {name:"Spot enduro",lat:50.605,lng:5.545,type:"public",country:"Belgique"},
+ {name:"Trace VTT",lat:50.585,lng:5.515,type:"trail",country:"Belgique"},
+
+ {name:"Bike Park Ferme Libert",lat:50.4464928,lng:6.02867633,type:"park",country:"Malmedy, Belgique"},
+ {name:"Les Gets Bike Park",lat:46.1568,lng:6.6332,type:"park",country:"Les Gets, France"},
+ {name:"Morzine Bike Park",lat:46.1801,lng:6.7089,type:"park",country:"Morzine, France"},
+ {name:"Avoriaz Bike Park",lat:46.1923,lng:6.7764,type:"park",country:"Avoriaz, France"},
+ {name:"Châtel Bike Park",lat:46.2121,lng:6.7924,type:"park",country:"Châtel, France"},
+ {name:"Lac Blanc Bike Park",lat:48.135,lng:7.095,type:"park",country:"Lac Blanc, France"},
+ {name:"Morgins Bike Park",lat:46.2370,lng:6.8572,type:"park",country:"Morgins, Suisse"},
+ {name:"Grindelwald Bike Park",lat:46.6237,lng:8.0417,type:"park",country:"Grindelwald, Suisse"},
+ {name:"Epic Bikepark Leogang",lat:47.439,lng:12.693,type:"park",country:"Leogang, Autriche"},
+ {name:"Bikepark Winterberg",lat:51.192,lng:8.526,type:"park",country:"Winterberg, Allemagne"}
+];
+
+function createBikeParkIcon(){
+ return L.divIcon({
+  className:"",
+  html:'<div class="bikepark-marker">BP</div>',
+  iconSize:[36,36],
+  iconAnchor:[18,18]
+ });
+}
+
+function initializeMap(){
+ if(map)return;
+
+ map=L.map("mapCanvas",{zoomControl:false}).setView([50.63,5.57],8);
+
+ L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  {attribution:"Tiles © Esri",maxZoom:19}
+ ).addTo(map);
+
+ L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{z}/{y}/{x}",
+  {attribution:"Labels and boundaries © Esri",maxZoom:19,opacity:1}
+ ).addTo(map);
+
+ L.control.zoom({position:"bottomright"}).addTo(map);
+
+ spots.forEach(spot=>{
+  let marker;
+
+  if(spot.type==="park"){
+   marker=L.marker([spot.lat,spot.lng],{icon:createBikeParkIcon()});
+  }else{
+   marker=L.marker([spot.lat,spot.lng]);
+  }
+
+  marker.addTo(map);
+
+  const typeLabel=spot.type==="park"?"Bike park":
+   spot.type==="private"?"Terrain privé":
+   spot.type==="public"?"Terrain public":"Tracé VTT";
+
+  marker.bindPopup(
+   "<b>"+spot.name+"</b><br>"+
+   typeLabel+"<br>"+
+   "<span style='color:#aaa'>"+spot.country+"</span>"
+  );
+
+  marker.spotType=spot.type;
+  markers.push(marker);
+ });
+}
+
+function filterSpots(type){
+ initializeMap();
+
+ markers.forEach(marker=>{
+  const show=type==="all"||marker.spotType===type;
+  if(show&&!map.hasLayer(marker))marker.addTo(map);
+  if(!show&&map.hasLayer(marker))map.removeLayer(marker);
+ });
+
+ if(type==="park"){
+  const parkPoints=spots.filter(s=>s.type==="park").map(s=>[s.lat,s.lng]);
+  if(parkPoints.length)map.fitBounds(parkPoints,{padding:[45,45],maxZoom:7});
+ }
+}
+
+function locateMe(){
+ if(!navigator.geolocation){
+  toast("La géolocalisation n'est pas disponible sur cet appareil.");
+  return;
+ }
+
+ navigator.geolocation.getCurrentPosition(position=>{
+  const lat=position.coords.latitude;
+  const lng=position.coords.longitude;
+
+  initializeMap();
+  map.setView([lat,lng],15);
+  L.marker([lat,lng]).addTo(map).bindPopup("Ta position").openPopup();
+ },()=>{
+  toast("Impossible d'obtenir ta position. Vérifie les autorisations.");
+ });
+}
+
+// =====================================
+// VIDÉOS
+// =====================================
+
+function videoTab(type){
+ const terrain=type==="terrain";
+ document.getElementById("terrainFeed").classList.toggle("hidden",!terrain);
+ document.getElementById("rideFeed").classList.toggle("hidden",terrain);
+ document.getElementById("tabTerrain").classList.toggle("active",terrain);
+ document.getElementById("tabRide").classList.toggle("active",!terrain);
+}
+
+// =====================================
+// NOTIFICATIONS
+// =====================================
+
+let toastTimer=null;
+
+function toast(message){
+ const box=document.getElementById("toastBox");
+ box.textContent=message;
+ box.classList.remove("hidden");
+ clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>box.classList.add("hidden"),3500);
+}
+</script>
+
+</body>
+</html>
