@@ -1,4 +1,3 @@
-HTML
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -101,31 +100,52 @@ main{padding-top:62px;padding-bottom:0;min-height:100vh}
 .video-overlay p{font-size:12px;color:#ddd}
 .video-plus{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);z-index:900;border:1px solid #777;background:#fff;color:#080808;width:52px;height:52px;border-radius:50%;font-size:30px;font-weight:300}
 
-.group-card,.profile-card,.settings-card{background:#121212;border:1px solid #292929;border-radius:9px;padding:18px;margin-bottom:12px}
-.group-card h3,.profile-card h3,.settings-card h3{font-size:15px;margin-bottom:7px}
-.group-card p,.profile-card p{font-size:12px;color:#888;line-height:1.5}
+.group-card,.settings-card{background:#121212;border:1px solid #292929;border-radius:9px;padding:18px;margin-bottom:12px}
+.group-card h3,.settings-card h3{font-size:15px;margin-bottom:7px}
+.group-card p{font-size:12px;color:#888;line-height:1.5}
 .action-btn{padding:12px 15px;border:1px solid #555;background:transparent;color:white;border-radius:6px;font-size:12px;margin-top:12px}
-.profile-top{display:flex;align-items:center;gap:15px;margin:20px 0 25px}
-.avatar{height:75px;width:75px;min-width:75px;border-radius:50%;background:#eee;color:#080808;display:flex;align-items:center;justify-content:center;font-size:27px;font-weight:900;overflow:hidden;position:relative}
+
+/* NOUVEAU PROFIL */
+.profile-section{padding:25px 20px 35px}
+.profile-heading{font-size:11px;letter-spacing:4px;color:#888;margin-bottom:30px}
+.profile-identity{display:flex;align-items:center;gap:18px;margin-bottom:24px}
+.avatar{height:92px;width:92px;min-width:92px;border-radius:50%;background:#eee;color:#080808;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;overflow:hidden;position:relative;border:2px solid #444}
 .avatar img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-.profile-name{font-size:19px;font-weight:900}
-.profile-email{font-size:12px;color:#888;margin-top:5px}
-.profile-bio{font-size:12px;color:#aaa;line-height:1.5;margin-top:8px;max-width:260px;overflow-wrap:anywhere}
-.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}
-.profile-stat{background:#121212;border:1px solid #292929;border-radius:8px;padding:14px 5px;text-align:center}
-.profile-stat strong{display:block;font-size:19px}
-.profile-stat span{display:block;font-size:10px;color:#888;margin-top:5px}
-.profile-edit{background:#111;border:1px solid #303030;border-radius:9px;padding:17px;margin:18px 0}
-.profile-edit h3{font-size:15px;margin-bottom:18px}
-.profile-edit .field{margin-bottom:15px}
-.profile-edit .field input,.profile-edit .field textarea{font-size:14px}
-.photo-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
-.photo-button{display:inline-flex;align-items:center;justify-content:center;padding:11px 13px;border:1px solid #555;border-radius:6px;background:#191919;color:white;font-size:11px}
-.photo-note{font-size:10px;color:#777;line-height:1.5;margin-top:9px}
-.profile-save{width:100%;padding:15px;border:0;border-radius:7px;background:white;color:black;font-size:12px;font-weight:900;margin-top:5px}
-.empty-profile{background:#111;border:1px solid #292929;border-radius:8px;padding:16px;margin-bottom:10px}
+.profile-name{font-size:23px;font-weight:900;letter-spacing:.3px}
+.profile-email{font-size:11px;color:#777;margin-top:7px}
+.profile-bio{font-size:13px;color:#bbb;line-height:1.6;margin-top:12px;max-width:100%;overflow-wrap:anywhere}
+.profile-edit-hint{font-size:10px;color:#777;letter-spacing:1px;margin:0 0 25px}
+.profile-edit-list{border-top:1px solid #292929;margin-bottom:30px}
+.profile-edit-row{width:100%;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:17px 2px;background:none;border:0;border-bottom:1px solid #292929;color:white;text-align:left}
+.profile-edit-row strong{display:block;font-size:13px;font-weight:700}
+.profile-edit-row span{display:block;color:#777;font-size:11px;margin-top:5px}
+.profile-edit-arrow{font-size:20px;color:#777}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:25px 0 32px}
+.profile-stat{padding:17px 5px;text-align:center;border-top:1px solid #292929;border-bottom:1px solid #292929}
+.profile-stat strong{display:block;font-size:22px}
+.profile-stat span{display:block;font-size:9px;color:#888;margin-top:6px;letter-spacing:1px}
+.profile-activity-title{font-size:13px;font-weight:900;letter-spacing:2px;margin-bottom:15px}
+.empty-profile{padding:17px 0;border-bottom:1px solid #292929}
 .empty-profile strong{font-size:13px}
 .empty-profile p{font-size:11px;color:#888;margin-top:6px;line-height:1.5}
+
+/* FENÊTRE DE MODIFICATION */
+#profileModal{position:fixed;inset:0;z-index:5500;background:#000b;display:flex;align-items:center;justify-content:center;padding:20px}
+.profile-modal-box{width:100%;max-width:390px;background:#111;border:1px solid #333;border-radius:12px;padding:22px;box-shadow:0 15px 50px #000}
+.profile-modal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.profile-modal-title{font-size:16px;font-weight:900}
+.profile-modal-close{border:0;background:none;color:#aaa;font-size:25px;padding:0 5px}
+.profile-modal-box input,.profile-modal-box textarea{width:100%;background:#080808;border:1px solid #333;border-radius:7px;padding:15px;color:white;outline:none;font-size:14px}
+.profile-modal-box input:focus,.profile-modal-box textarea:focus{border-color:#aaa}
+.profile-modal-box textarea{min-height:120px;resize:vertical;line-height:1.5}
+.modal-help{font-size:10px;color:#777;margin-top:9px;line-height:1.5}
+.modal-save{width:100%;padding:15px;background:white;color:black;border:0;border-radius:7px;font-weight:900;font-size:12px;margin-top:20px}
+.modal-save:disabled{opacity:.5}
+.modal-photo-preview{width:100px;height:100px;border-radius:50%;overflow:hidden;background:#222;margin:0 auto 20px;display:flex;align-items:center;justify-content:center}
+.modal-photo-preview img{width:100%;height:100%;object-fit:cover}
+.modal-photo-preview span{font-size:30px;font-weight:900}
+.photo-select{display:block;text-align:center;padding:14px;border:1px solid #555;border-radius:7px;color:white;font-size:12px;background:#191919}
+
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#eee;color:#111;padding:12px 18px;border-radius:7px;font-size:12px;z-index:6000;max-width:90%;text-align:center}
 </style>
 </head>
@@ -204,7 +224,6 @@ main{padding-top:62px;padding-bottom:0;min-height:100vh}
  </div>
 </div>
 
-<!-- MENU -->
 <div id="shade" onclick="closeMenu()"></div>
 <aside id="drawer">
  <div class="drawer-top">BOAR</div>
@@ -295,21 +314,49 @@ main{padding-top:62px;padding-bottom:0;min-height:100vh}
   <button class="video-plus" onclick="toast('La publication de vidéos sera activée avec le stockage BOAR.')">+</button>
  </section>
 
- <!-- PROFIL -->
+ <!-- PROFIL REDESSINÉ -->
  <section id="profile" class="page">
-  <div class="section">
-   <div class="section-heading">MON PROFIL</div>
+  <div class="profile-section">
+   <div class="profile-heading">MON PROFIL</div>
 
-   <div class="profile-top">
-    <div class="avatar" id="profileAvatar">
+   <div class="profile-identity">
+    <button class="avatar" id="profileAvatar" onclick="openProfileEditor('photo')" aria-label="Changer ma photo de profil">
      <span id="profileAvatarLetter">B</span>
      <img id="profileAvatarImage" class="hidden" alt="Photo de profil">
-    </div>
+    </button>
     <div>
      <div class="profile-name" id="profileName">Rider</div>
      <div class="profile-email" id="profileEmail"></div>
      <div class="profile-bio" id="profileBio">Aucune bio pour le moment.</div>
     </div>
+   </div>
+
+   <div class="profile-edit-hint">APPUIE SUR UN ÉLÉMENT CI-DESSOUS POUR LE MODIFIER</div>
+
+   <div class="profile-edit-list">
+    <button class="profile-edit-row" onclick="openProfileEditor('name')">
+     <div>
+      <strong>Nom / pseudo</strong>
+      <span>Modifier ton nom sur BOAR</span>
+     </div>
+     <div class="profile-edit-arrow">›</div>
+    </button>
+
+    <button class="profile-edit-row" onclick="openProfileEditor('bio')">
+     <div>
+      <strong>Biographie</strong>
+      <span>Modifier ta présentation</span>
+     </div>
+     <div class="profile-edit-arrow">›</div>
+    </button>
+
+    <button class="profile-edit-row" onclick="openProfileEditor('photo')">
+     <div>
+      <strong>Photo de profil</strong>
+      <span>Changer ou retirer ta photo</span>
+     </div>
+     <div class="profile-edit-arrow">›</div>
+    </button>
    </div>
 
    <div class="profile-stats">
@@ -318,33 +365,8 @@ main{padding-top:62px;padding-bottom:0;min-height:100vh}
     <div class="profile-stat"><strong>0</strong><span>TRACÉS</span></div>
    </div>
 
-   <div class="profile-edit">
-    <h3>MODIFIER MON PROFIL</h3>
+   <div class="profile-activity-title">MON ACTIVITÉ</div>
 
-    <div class="field">
-     <label>MON PSEUDO</label>
-     <input id="editProfileName" type="text" maxlength="30" placeholder="Ton pseudo">
-    </div>
-
-    <div class="field">
-     <label>MA BIOGRAPHIE</label>
-     <textarea id="editProfileBio" maxlength="160" placeholder="Présente-toi aux autres riders..."></textarea>
-    </div>
-
-    <div class="field">
-     <label>MA PHOTO DE PROFIL</label>
-     <input id="avatarFile" type="file" accept="image/*" class="hidden" onchange="handleAvatarChange(event)">
-     <div class="photo-actions">
-      <label for="avatarFile" class="photo-button">CHOISIR UNE PHOTO</label>
-      <button type="button" class="photo-button" onclick="removeAvatar()">RETIRER LA PHOTO</button>
-     </div>
-     <div class="photo-note">Choisis une image depuis ton téléphone. La photo sera envoyée dans le stockage BOAR.</div>
-    </div>
-
-    <button class="profile-save" id="saveProfileButton" onclick="saveProfile()">ENREGISTRER LES MODIFICATIONS</button>
-   </div>
-
-   <div class="section-heading" style="margin-top:25px">MON ACTIVITÉ</div>
    <div class="empty-profile">
     <strong>Mes vidéos</strong>
     <p>Tes vidéos publiées apparaîtront ici lorsque la publication sera activée.</p>
@@ -380,6 +402,19 @@ main{padding-top:62px;padding-bottom:0;min-height:100vh}
 
 </main>
 
+<!-- FENÊTRE DE MODIFICATION DU PROFIL -->
+<div id="profileModal" class="hidden" onclick="modalBackgroundClose(event)">
+ <div class="profile-modal-box">
+  <div class="profile-modal-top">
+   <div class="profile-modal-title" id="profileModalTitle">Modifier le profil</div>
+   <button class="profile-modal-close" onclick="closeProfileEditor()">×</button>
+  </div>
+
+  <div id="profileModalContent"></div>
+  <button class="modal-save" id="profileModalSave" onclick="saveProfileField()">ENREGISTRER</button>
+ </div>
+</div>
+
 <div id="toastBox" class="toast hidden"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -387,7 +422,7 @@ main{padding-top:62px;padding-bottom:0;min-height:100vh}
 
 <script>
 // =====================================
-// SUPABASE — CLÉ ORIGINALE CONSERVÉE
+// SUPABASE
 // =====================================
 
 const SUPABASE_URL = "https://xvzooqfqteuayhwwfjet.supabase.co";
@@ -413,6 +448,7 @@ let currentUser=null;
 let selectedAvatarFile=null;
 let avatarPreviewUrl=null;
 let avatarMustBeRemoved=false;
+let activeProfileEditor="";
 
 function displayAvatar(url,username){
  const image=document.getElementById("profileAvatarImage");
@@ -450,19 +486,85 @@ function loadProfile(user){
  document.getElementById("profileBio").textContent=bio||"Aucune bio pour le moment.";
  document.getElementById("settingsEmail").textContent=user.email||"";
 
- document.getElementById("editProfileName").value=username;
- document.getElementById("editProfileBio").value=bio;
-
  displayAvatar(avatarUrl,username);
 }
 
 // =====================================
-// PHOTO DE PROFIL
+// FENÊTRE DE MODIFICATION
 // =====================================
+
+function openProfileEditor(type){
+ if(!currentUser){
+  toast("Connecte-toi pour modifier ton profil.");
+  return;
+ }
+
+ activeProfileEditor=type;
+
+ const modal=document.getElementById("profileModal");
+ const title=document.getElementById("profileModalTitle");
+ const content=document.getElementById("profileModalContent");
+ const save=document.getElementById("profileModalSave");
+ const metadata=currentUser.user_metadata||{};
+
+ content.innerHTML="";
+ save.style.display="block";
+ save.disabled=false;
+
+ if(type==="name"){
+  title.textContent="Modifier mon pseudo";
+  content.innerHTML=`
+   <input id="profileModalInput" type="text" maxlength="30" placeholder="Ton pseudo">
+   <div class="modal-help">Ton pseudo sera affiché sur ton profil BOAR.</div>
+  `;
+  document.getElementById("profileModalInput").value=metadata.username||currentUser.email.split("@")[0];
+ }
+
+ if(type==="bio"){
+  title.textContent="Modifier ma bio";
+  content.innerHTML=`
+   <textarea id="profileModalInput" maxlength="160" placeholder="Présente-toi aux autres riders..."></textarea>
+   <div class="modal-help">160 caractères maximum.</div>
+  `;
+  document.getElementById("profileModalInput").value=metadata.bio||"";
+ }
+
+ if(type==="photo"){
+  title.textContent="Ma photo de profil";
+
+  const url=metadata.avatar_url||"";
+  const initial=(metadata.username||"B").charAt(0).toUpperCase();
+
+  content.innerHTML=`
+   <div class="modal-photo-preview">
+    ${url?`<img id="modalAvatarPreview" src="${url}" alt="Photo actuelle">`:`<span id="modalAvatarLetter">${initial}</span>`}
+   </div>
+   <input id="avatarFile" type="file" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="handleAvatarChange(event)">
+   <label for="avatarFile" class="photo-select">CHOISIR UNE NOUVELLE PHOTO</label>
+   <div class="modal-help">Image JPG, PNG ou WebP. Taille maximale : 5 Mo.</div>
+   <button type="button" class="photo-select" style="margin-top:12px;width:100%" onclick="removeAvatar()">RETIRER MA PHOTO</button>
+  `;
+  save.textContent="ENREGISTRER LA PHOTO";
+ }
+
+ if(type!=="photo"){
+  save.textContent="ENREGISTRER";
+ }
+
+ modal.classList.remove("hidden");
+}
+
+function closeProfileEditor(){
+ document.getElementById("profileModal").classList.add("hidden");
+ activeProfileEditor="";
+}
+
+function modalBackgroundClose(event){
+ if(event.target.id==="profileModal")closeProfileEditor();
+}
 
 function handleAvatarChange(event){
  const file=event.target.files&&event.target.files[0];
-
  if(!file)return;
 
  if(!file.type.startsWith("image/")){
@@ -483,10 +585,18 @@ function handleAvatarChange(event){
  if(avatarPreviewUrl)URL.revokeObjectURL(avatarPreviewUrl);
  avatarPreviewUrl=URL.createObjectURL(file);
 
- const username=document.getElementById("editProfileName").value||"Rider";
- displayAvatar(avatarPreviewUrl,username);
+ const preview=document.getElementById("modalAvatarPreview");
+ const letter=document.getElementById("modalAvatarLetter");
 
- toast("Photo sélectionnée. Pense à enregistrer ton profil.");
+ if(preview){
+  preview.src=avatarPreviewUrl;
+ }else if(letter){
+  const container=letter.parentElement;
+  container.innerHTML='<img id="modalAvatarPreview" alt="Nouvelle photo" style="width:100%;height:100%;object-fit:cover">';
+  document.getElementById("modalAvatarPreview").src=avatarPreviewUrl;
+ }
+
+ toast("Photo sélectionnée. Appuie sur enregistrer.");
 }
 
 function removeAvatar(){
@@ -498,14 +608,27 @@ function removeAvatar(){
   avatarPreviewUrl=null;
  }
 
- document.getElementById("avatarFile").value="";
- const username=document.getElementById("editProfileName").value||"Rider";
- displayAvatar("",username);
+ const preview=document.getElementById("modalAvatarPreview");
+ const letter=document.getElementById("modalAvatarLetter");
+ const username=currentUser?.user_metadata?.username||"B";
 
- toast("La photo sera retirée lorsque tu enregistreras.");
+ if(preview){
+  const container=preview.parentElement;
+  container.innerHTML='<span id="modalAvatarLetter">'+username.charAt(0).toUpperCase()+'</span>';
+ }else if(letter){
+  letter.textContent=username.charAt(0).toUpperCase();
+ }
+
+ const fileInput=document.getElementById("avatarFile");
+ if(fileInput)fileInput.value="";
+
+ toast("La photo sera retirée après enregistrement.");
 }
 
-// Réduit la taille de la photo avant l'envoi.
+// =====================================
+// COMPRESSION PHOTO
+// =====================================
+
 function compressAvatar(file){
  return new Promise((resolve,reject)=>{
   const reader=new FileReader();
@@ -551,72 +674,82 @@ function compressAvatar(file){
 }
 
 // =====================================
-// ENREGISTREMENT DU PROFIL
+// ENREGISTRER LA MODIFICATION CHOISIE
 // =====================================
 
-async function saveProfile(){
+async function saveProfileField(){
  if(!currentUser){
   toast("Connecte-toi pour modifier ton profil.");
   return;
  }
 
- const username=document.getElementById("editProfileName").value.trim();
- const bio=document.getElementById("editProfileBio").value.trim();
- const button=document.getElementById("saveProfileButton");
-
- if(username.length<2){
-  toast("Ton pseudo doit contenir au moins 2 caractères.");
-  return;
- }
-
- if(username.length>30){
-  toast("Ton pseudo est trop long.");
-  return;
- }
+ const button=document.getElementById("profileModalSave");
+ const metadata=currentUser.user_metadata||{};
 
  button.disabled=true;
  button.textContent="ENREGISTREMENT...";
 
  try{
-  let avatarUrl=currentUser.user_metadata?.avatar_url||"";
+  let updateData={};
 
-  // Envoi de la nouvelle photo dans Supabase Storage.
-  if(selectedAvatarFile){
-   const imageBlob=await compressAvatar(selectedAvatarFile);
-   const avatarPath=currentUser.id+"/avatar.jpg";
+  if(activeProfileEditor==="name"){
+   const username=document.getElementById("profileModalInput").value.trim();
 
-   const {error:uploadError}=await supabaseClient
-    .storage
-    .from("avatars")
-    .upload(avatarPath,imageBlob,{
-     upsert:true,
-     contentType:"image/jpeg",
-     cacheControl:"3600"
-    });
-
-   if(uploadError){
-    throw new Error("La photo n'a pas pu être envoyée. Vérifie que le stockage « avatars » existe dans Supabase.");
+   if(username.length<2){
+    toast("Ton pseudo doit contenir au moins 2 caractères.");
+    return;
    }
 
-   const {data:publicData}=supabaseClient
-    .storage
-    .from("avatars")
-    .getPublicUrl(avatarPath);
+   if(username.length>30){
+    toast("Ton pseudo est trop long.");
+    return;
+   }
 
-   avatarUrl=publicData.publicUrl+"?v="+Date.now();
+   updateData.username=username;
   }
 
-  if(avatarMustBeRemoved){
-   avatarUrl="";
+  if(activeProfileEditor==="bio"){
+   const bio=document.getElementById("profileModalInput").value.trim();
+   updateData.bio=bio;
   }
 
-  // Enregistrement du pseudo, de la bio et de la photo dans le compte.
+  if(activeProfileEditor==="photo"){
+   let avatarUrl=metadata.avatar_url||"";
+
+   if(selectedAvatarFile){
+    const imageBlob=await compressAvatar(selectedAvatarFile);
+    const avatarPath=currentUser.id+"/avatar.jpg";
+
+    const {error:uploadError}=await supabaseClient
+     .storage
+     .from("avatars")
+     .upload(avatarPath,imageBlob,{
+      upsert:true,
+      contentType:"image/jpeg",
+      cacheControl:"3600"
+     });
+
+    if(uploadError){
+     throw new Error("La photo n'a pas pu être envoyée. Vérifie le stockage avatars dans Supabase.");
+    }
+
+    const {data:publicData}=supabaseClient
+     .storage
+     .from("avatars")
+     .getPublicUrl(avatarPath);
+
+    avatarUrl=publicData.publicUrl+"?v="+Date.now();
+   }
+
+   if(avatarMustBeRemoved){
+    avatarUrl="";
+   }
+
+   updateData.avatar_url=avatarUrl;
+  }
+
   const {data,error}=await supabaseClient.auth.updateUser({
-   data:{
-    username:username,
-    bio:bio,
-    avatar_url:avatarUrl
-   }
+   data:updateData
   });
 
   if(error)throw error;
@@ -630,17 +763,16 @@ async function saveProfile(){
    avatarPreviewUrl=null;
   }
 
-  document.getElementById("avatarFile").value="";
   loadProfile(currentUser);
-
-  toast("Ton profil BOAR a bien été enregistré.");
+  closeProfileEditor();
+  toast("Ton profil BOAR a bien été mis à jour.");
 
  }catch(error){
   console.error(error);
-  toast(error.message||"Une erreur est survenue pendant l'enregistrement.");
+  toast(error.message||"Une erreur est survenue.");
  }finally{
   button.disabled=false;
-  button.textContent="ENREGISTRER LES MODIFICATIONS";
+  button.textContent=activeProfileEditor==="photo"?"ENREGISTRER LA PHOTO":"ENREGISTRER";
  }
 }
 
