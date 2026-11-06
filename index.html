@@ -44,7 +44,14 @@ img{display:block;width:100%;object-fit:cover}
   border:0;background:none;font-size:26px;
   width:42px;height:42px;text-align:left
 }
-.page{display:none;animation:appear .3s ease}
+.page{
+  display:none;
+  animation:appear .3s ease;
+  position:relative;
+  z-index:1;
+  isolation:isolate;
+  overflow:hidden;
+}
 .page.active{display:block}
 @keyframes appear{
   from{opacity:0;transform:translateY(8px)}
@@ -128,14 +135,15 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 /* MENU */
 .overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.65);
-  z-index:40;opacity:0;pointer-events:none;transition:.3s
+  z-index:1000;opacity:0;pointer-events:none;transition:.3s
 }
 .overlay.open{opacity:1;pointer-events:auto}
 .drawer{
-  position:fixed;z-index:50;left:0;top:0;bottom:0;
+  position:fixed;z-index:1001;left:0;top:0;bottom:0;
   width:76%;max-width:340px;background:#101010;
   border-right:1px solid #333;padding:28px 22px;
-  transform:translateX(-105%);transition:transform .35s ease
+  transform:translateX(-105%);transition:transform .35s ease;
+  isolation:isolate;
 }
 .drawer.open{transform:translateX(0)}
 .drawer-head{margin:20px 0 45px}
@@ -153,11 +161,19 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 }
 
 /* CARTE */
+#mapPage{
+  position:relative;
+  z-index:1;
+  isolation:isolate;
+  overflow:hidden;
+}
 .map-page-title{padding:20px 18px 14px}
 .map-page-title h1{font-size:30px}
 .map-tools{
   padding:13px 15px;background:#090909;
-  border-bottom:1px solid #252525
+  border-bottom:1px solid #252525;
+  position:relative;
+  z-index:3;
 }
 .map-actions{
   display:flex;gap:17px;overflow-x:auto;
@@ -181,17 +197,33 @@ p{color:#aaa;line-height:1.5;font-size:13px}
 }
 #map{
   height:calc(100vh - 230px);
-  min-height:430px;background:#222
+  min-height:430px;
+  background:#222;
+  position:relative;
+  z-index:0;
+  isolation:isolate;
+  overflow:hidden;
 }
-.leaflet-container{background:#222}
+.leaflet-container{
+  background:#222;
+  z-index:0 !important;
+}
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom,
+.leaflet-control{
+  z-index:1 !important;
+}
 .map-note{
   font-size:10px;padding:10px 14px;
-  color:#999;background:#101010
+  color:#999;background:#101010;
+  position:relative;z-index:2;
 }
 .map-legend{
   display:flex;gap:15px;flex-wrap:wrap;
   padding:10px 14px;background:#101010;
-  border-top:1px solid #242424
+  border-top:1px solid #242424;
+  position:relative;z-index:2;
 }
 .legend-item{
   display:flex;align-items:center;gap:6px;
@@ -298,7 +330,7 @@ p{color:#aaa;line-height:1.5;font-size:13px}
   position:fixed;bottom:25px;left:50%;
   transform:translateX(-50%);
   background:#eee;color:#111;padding:12px 17px;
-  font-size:12px;z-index:100;display:none;
+  font-size:12px;z-index:1100;display:none;
   max-width:90%;text-align:center
 }
 @media(min-width:700px){
@@ -609,151 +641,28 @@ function shopCategory(category){
   });
 }
 
-/* LISTE DES BIKE PARKS
-   Les coordonnées servent à placer les marqueurs
-   sur la carte. Elles sont indicatives.
-*/
+/* LISTE DES BIKE PARKS */
 const bikeParks=[
-  {
-    name:'Ferme Libert',
-    country:'Belgique',
-    region:'Malmedy',
-    lat:50.414,
-    lng:6.034
-  },
-  {
-    name:'Les Gets Bike Park',
-    country:'France',
-    region:'Les Gets',
-    lat:46.158,
-    lng:6.670
-  },
-  {
-    name:'Morzine Bike Park',
-    country:'France',
-    region:'Morzine',
-    lat:46.180,
-    lng:6.704
-  },
-  {
-    name:'Avoriaz Bike Park',
-    country:'France',
-    region:'Avoriaz',
-    lat:46.191,
-    lng:6.775
-  },
-  {
-    name:'Châtel Bike Park',
-    country:'France',
-    region:'Châtel',
-    lat:46.267,
-    lng:6.840
-  },
-  {
-    name:'Tignes Bike Park',
-    country:'France',
-    region:'Tignes',
-    lat:45.469,
-    lng:6.909
-  },
-  {
-    name:'Les 2 Alpes',
-    country:'France',
-    region:'Les Deux Alpes',
-    lat:45.014,
-    lng:6.122
-  },
-  {
-    name:'Bikepark Leogang',
-    country:'Autriche',
-    region:'Leogang',
-    lat:47.439,
-    lng:12.760
-  },
-  {
-    name:'Planai Bikepark',
-    country:'Autriche',
-    region:'Schladming',
-    lat:47.392,
-    lng:13.687
-  },
-  {
-    name:'Saalbach Hinterglemm',
-    country:'Autriche',
-    region:'Saalbach',
-    lat:47.391,
-    lng:12.636
-  },
-  {
-    name:'Serfaus-Fiss-Ladis',
-    country:'Autriche',
-    region:'Tyrol',
-    lat:47.056,
-    lng:10.609
-  },
-  {
-    name:'Bikepark Winterberg',
-    country:'Allemagne',
-    region:'Winterberg',
-    lat:51.190,
-    lng:8.531
-  },
-  {
-    name:'Bikepark Geisskopf',
-    country:'Allemagne',
-    region:'Bischofsmais',
-    lat:48.971,
-    lng:13.017
-  },
-  {
-    name:'Verbier Bikepark',
-    country:'Suisse',
-    region:'Verbier',
-    lat:46.096,
-    lng:7.228
-  },
-  {
-    name:'Lenzerheide Bikepark',
-    country:'Suisse',
-    region:'Lenzerheide',
-    lat:46.727,
-    lng:9.557
-  },
-  {
-    name:'Finale Outdoor Region',
-    country:'Italie',
-    region:'Finale Ligure',
-    lat:44.170,
-    lng:8.344
-  },
-  {
-    name:'Mottolino Bikepark',
-    country:'Italie',
-    region:'Livigno',
-    lat:46.538,
-    lng:10.135
-  },
-  {
-    name:'Val di Sole Bikepark',
-    country:'Italie',
-    region:'Commezzadura',
-    lat:46.318,
-    lng:10.750
-  },
-  {
-    name:'La Thuile Bikepark',
-    country:'Italie',
-    region:'La Thuile',
-    lat:45.713,
-    lng:6.950
-  },
-  {
-    name:'Pal Arinsal Bike Park',
-    country:'Andorre',
-    region:'La Massana',
-    lat:42.548,
-    lng:1.481
-  }
+  {name:'Ferme Libert',country:'Belgique',region:'Malmedy',lat:50.414,lng:6.034},
+  {name:'Les Gets Bike Park',country:'France',region:'Les Gets',lat:46.158,lng:6.670},
+  {name:'Morzine Bike Park',country:'France',region:'Morzine',lat:46.180,lng:6.704},
+  {name:'Avoriaz Bike Park',country:'France',region:'Avoriaz',lat:46.191,lng:6.775},
+  {name:'Châtel Bike Park',country:'France',region:'Châtel',lat:46.267,lng:6.840},
+  {name:'Tignes Bike Park',country:'France',region:'Tignes',lat:45.469,lng:6.909},
+  {name:'Les 2 Alpes',country:'France',region:'Les Deux Alpes',lat:45.014,lng:6.122},
+  {name:'Bikepark Leogang',country:'Autriche',region:'Leogang',lat:47.439,lng:12.760},
+  {name:'Planai Bikepark',country:'Autriche',region:'Schladming',lat:47.392,lng:13.687},
+  {name:'Saalbach Hinterglemm',country:'Autriche',region:'Saalbach',lat:47.391,lng:12.636},
+  {name:'Serfaus-Fiss-Ladis',country:'Autriche',region:'Tyrol',lat:47.056,lng:10.609},
+  {name:'Bikepark Winterberg',country:'Allemagne',region:'Winterberg',lat:51.190,lng:8.531},
+  {name:'Bikepark Geisskopf',country:'Allemagne',region:'Bischofsmais',lat:48.971,lng:13.017},
+  {name:'Verbier Bikepark',country:'Suisse',region:'Verbier',lat:46.096,lng:7.228},
+  {name:'Lenzerheide Bikepark',country:'Suisse',region:'Lenzerheide',lat:46.727,lng:9.557},
+  {name:'Finale Outdoor Region',country:'Italie',region:'Finale Ligure',lat:44.170,lng:8.344},
+  {name:'Mottolino Bikepark',country:'Italie',region:'Livigno',lat:46.538,lng:10.135},
+  {name:'Val di Sole Bikepark',country:'Italie',region:'Commezzadura',lat:46.318,lng:10.750},
+  {name:'La Thuile Bikepark',country:'Italie',region:'La Thuile',lat:45.713,lng:6.950},
+  {name:'Pal Arinsal Bike Park',country:'Andorre',region:'La Massana',lat:42.548,lng:1.481}
 ];
 
 /* CRÉATION DE LA CARTE */
@@ -766,30 +675,18 @@ function initMap(){
     scrollWheelZoom:true
   }).setView([47.3,9.2],5);
 
-  /* IMAGERIE SATELLITE */
   const satellite=L.tileLayer(
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    {
-      attribution:'Tiles © Esri',
-      maxZoom:19
-    }
+    {attribution:'Tiles © Esri',maxZoom:19}
   );
-
   satellite.addTo(map);
 
-  /* COUCHE DES FRONTIÈRES ET DES NOMS DE PAYS */
   const boundaries=L.tileLayer(
     'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
-    {
-      attribution:'Boundaries and labels © Esri',
-      maxZoom:19,
-      opacity:1
-    }
+    {attribution:'Boundaries and labels © Esri',maxZoom:19,opacity:1}
   );
-
   boundaries.addTo(map);
 
-  /* MARQUEURS DES BIKE PARKS */
   bikeParks.forEach(park=>{
     const icon=L.divIcon({
       className:'',
@@ -829,18 +726,12 @@ function filterParks(country,button){
   parkMarkers.forEach(marker=>{
     const visible=country==='all'||marker.parkCountry===country;
 
-    if(visible&&!map.hasLayer(marker)){
-      marker.addTo(map);
-    }
-    if(!visible&&map.hasLayer(marker)){
-      map.removeLayer(marker);
-    }
+    if(visible&&!map.hasLayer(marker))marker.addTo(map);
+    if(!visible&&map.hasLayer(marker))map.removeLayer(marker);
   });
 
-  /* RECADRAGE SUR LE PAYS FILTRÉ */
   if(country!=='all'){
     const matching=parkMarkers.filter(m=>m.parkCountry===country);
-
     if(matching.length){
       const group=L.featureGroup(matching);
       map.fitBounds(group.getBounds().pad(0.35),{
